@@ -104,6 +104,43 @@ class AcceptanceTester extends Actor
         $this->shopInstance->fillCustomerDetails();
     }
 
+
+    /**
+     * @Given I activate :arg1 option :arg2 in configuration
+     */
+    public function iActivateOptionInConfiguration($arg1, $arg2)
+    {
+        throw new \PHPUnit\Framework\IncompleteTestError("Step `I activate :arg1 option :arg2 in configuration` is not defined");
+    }
+
+    /**
+     * @Given I register customer
+     */
+    public function iRegisterCustomer()
+    {
+        $this->shopInstance->registerCustomer();
+    }
+
+    /**
+     * @Given I prepare checkout with purchase sum :minPurchaseSum in shop system as :arg2
+     */
+    public function iPrepareCheckoutWithPurchaseSumInShopSystemAs($minPurchaseSum, $customerType)
+    {
+        if ($customerType === 'registered customer')
+        {
+            $this->shopInstance->logIn();
+        }
+        $this->shopInstance->fillBasket($minPurchaseSum);
+        $this->shopInstance->goToCheckout();
+        $this->shopInstance->fillCustomerDetails();
+    }
+
+
+
+
+
+
+
     /**
      * @Then I see :text
      * @param $text
