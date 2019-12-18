@@ -78,7 +78,10 @@ class AcceptanceTester extends Actor
         }
         $this->configData = $this->getDataFromDataFile($this->getFullPath(FileSytem::CONFIG_FILE));
         $this->gateway = $this->configData->gateway;
-        $this->shopInstance = $this->createShopSystemInstance($usedShopEnvVariable);
+        if (!$this->shopInstance)
+        {
+            $this->shopInstance = $this->createShopSystemInstance($usedShopEnvVariable);
+        }
     }
 
     /**
@@ -90,6 +93,7 @@ class AcceptanceTester extends Actor
     public function iActivatePaymentActionInConfiguration($paymentMethod, $paymentAction): void
     {
         $this->shopInstance->configurePaymentMethodCredentials($paymentMethod, $paymentAction);
+        $this->pause();
     }
 
     /**
@@ -106,26 +110,12 @@ class AcceptanceTester extends Actor
 
 
     /**
-     * @Given I activate :arg1 option :arg2 in configuration
-     */
-    public function iActivateOptionInConfiguration($arg1, $arg2)
-    {
-        throw new \PHPUnit\Framework\IncompleteTestError("Step `I activate :arg1 option :arg2 in configuration` is not defined");
-    }
-
-    /**
-     * @Given I register customer
-     */
-    public function iRegisterCustomer()
-    {
-        $this->shopInstance->registerCustomer();
-    }
-
-    /**
      * @Given I prepare checkout with purchase sum :minPurchaseSum in shop system as :arg2
      */
     public function iPrepareCheckoutWithPurchaseSumInShopSystemAs($minPurchaseSum, $customerType)
     {
+
+        $this->pause();
         if ($customerType === 'registered customer')
         {
             $this->shopInstance->logIn();
@@ -232,7 +222,7 @@ class AcceptanceTester extends Actor
         /** @var GenericShopSystemStep $shopInstance */
         $shopInstance = new $this->shopInstanceMap[$shopSystemName]($this->getScenario(), $this->gateway, $this->configData->customer_data);
         $shopInstance->configureShopSystemCurrencyAndCountry($this->configData->currency, $this->configData->default_country);
-
+        $shopInstance->registerCustomer();
         return $shopInstance;
     }
 

@@ -57,6 +57,7 @@ class GenericShopSystemStep extends GenericStep
     {
         parent::__construct($scenario, $gateway);
         $this->setLocator($this->getDataFromDataFile($this->getFullPath(FileSytem::SHOP_SYSTEM_LOCATOR_FOLDER_PATH . static::STEP_NAME . DIRECTORY_SEPARATOR . static::STEP_NAME . 'Locators.json')));
+       //TODO will need to have 2 customer objects - one guest - one not guest
         $this->createCustomerObject($customerDataFileName);
     }
 

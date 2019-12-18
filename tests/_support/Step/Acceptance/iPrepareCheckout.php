@@ -35,4 +35,9 @@ interface iPrepareCheckout
      * @return mixed
      */
     public function proceedWithPayment($paymentMethod);
+
+    /**
+     * @return mixed
+     */
+    public function registerCustomer();
 }

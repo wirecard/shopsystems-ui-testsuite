@@ -49,6 +49,14 @@ class WoocommerceStep extends GenericShopSystemStep implements iConfigurePayment
     }
 
     /**
+     * @return mixed
+     */
+    public function registerCustomer()
+    {
+
+    }
+
+    /**
      * @param String $paymentMethod
      * @return mixed
      * @throws Exception

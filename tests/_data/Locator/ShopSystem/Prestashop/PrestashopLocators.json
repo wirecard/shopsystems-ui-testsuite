@@ -2,7 +2,9 @@
   "page": {
     "product": "index.php?id_product=1&id_product_attribute=1&rewrite=hummingbird-printed-t-shirt&controller=product#/1-size-s/8-color-white",
     "checkout": "index.php?controller=order",
-    "order_received": "order-confirmation"
+    "order_received": "order-confirmation",
+    "register": "index.php?controller=authentication&create_account=1",
+    "log_out": "index.php?mylogout="
   },
   "product": {
     "price": "22.94",
@@ -20,6 +22,7 @@
     "post_code": "//*[@name='postcode']",
     "phone": "//*[@name='phone']",
     "email_address": "//*[@name='email']",
+    "password":  "//*[@name='password']",
     "creditcard_name" : "Wirecard Credit Card",
     "paypal_name" : "Wirecard PayPal",
     "creditcard_form" : "//input[@type='radio'][contains(@data-module-name, 'wd-creditcard')]",
@@ -36,5 +39,9 @@
   },
   "order_received": {
     "order_confirmed_message": "YOUR ORDER IS CONFIRMED"
+  },
+  "register": {
+    "save": "//button[@type='submit'][contains(@data-link-action, 'save-customer')]",
+    "log_out": "//*[@class='logout hidden-sm-down]']"
   }
 }

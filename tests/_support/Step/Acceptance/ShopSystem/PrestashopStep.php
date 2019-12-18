@@ -30,6 +30,14 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
 
     const CURRENCY_OPTION_NAME = 'PS_CURRENCY_DEFAULT';
 
+    const CREDIT_CARD_ONE_CLICK_CONFIGURATION_OPTION = 'cc_vault_enabled';
+
+    const CUSTOMER_TABLE = 'ps_customer';
+
+    const CUSTOMER_IS_GUEST_COLUMN_NAME = 'is_guest';
+
+    const CUSTOMER_EMAIL_COLUMN_NAME = 'is_guest';
+
     /**
      * @var array
      */
@@ -46,13 +54,23 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      */
     public function configurePaymentMethodCredentials($paymentMethod, $paymentAction)
     {
-        $db_config = $this->buildPaymentMethodConfig($paymentMethod, $paymentAction, $this->getMappedPaymentActions(), $this->getGateway());
+        $actingPaymentMethod = $this->getActingPaymentMethod($paymentMethod);
+        $db_config = $this->buildPaymentMethodConfig(
+            $actingPaymentMethod,
+            $paymentAction,
+            $this->getMappedPaymentActions(),
+            $this->getGateway());
+        if ($paymentMethod === 'CreditCardOneClick')
+        {
+            //CreditCard One click is not a separate payment method but a configuration of CreditCard
+            $db_config[self::CREDIT_CARD_ONE_CLICK_CONFIGURATION_OPTION] = '1';
+        }
         foreach ($db_config as $name => $value) {
             //some configuration options are different if different shops, this is handling the differences
             if (array_key_exists($name, $this->getPaymentMethodConfigurationNameExceptions())) {
                 $name = $this->getPaymentMethodConfigurationNameExceptions()[$name];
             }
-            $fullName = self::PAYMENT_METHOD_PREFIX . strtoupper($paymentMethod) . '_' . strtoupper($name);
+            $fullName = self::PAYMENT_METHOD_PREFIX . strtoupper($actingPaymentMethod) . '_' . strtoupper($name);
             $this->putValueInDatabase($fullName, $value);
         }
     }
@@ -73,6 +91,23 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
         //payment modules needs to be activated for specific country
         $this->updateInDatabase('ps_module_country', ['id_country' => $countryID], ['id_module' => $moduleID]);
         parent::configureShopSystemCurrencyAndCountry($currencyID, $countryID);
+    }
+
+    /**
+     * @return mixed
+     * @throws ExceptionAlias
+     */
+    public function registerCustomer()
+    {
+        if ( ! $this->isCustomerRegistered())
+        {
+            $this->amOnPage($this->getLocator()->page->register);
+            $this->fillMandatoryCustomerData();
+            $this->preparedFillField($this->getLocator()->checkout->password, $this->getCustomer()->getPassword());
+            $this->checkOption($this->getLocator()->checkout->agree_to_terms_and_conditions_and_privacy_policy);
+            $this->preparedClick($this->getLocator()->register->save);
+            $this->amOnPage($this->getLocator()->page->log_out);
+        }
     }
 
     /**
@@ -117,13 +152,21 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      */
     public function fillCustomerDetails()
     {
+        $this->fillMandatoryCustomerData();
+        $this->checkOption($this->getLocator()->checkout->agree_to_terms_and_conditions_and_privacy_policy);
+        $this->preparedClick($this->getLocator()->checkout->continue);
+        $this->fillBillingDetails();
+    }
+
+    /**
+     * @throws ExceptionAlias
+     */
+    public function fillMandatoryCustomerData()
+    {
         $this->selectOption($this->getLocator()->checkout->social_title, '1');
         $this->preparedFillField($this->getLocator()->checkout->first_name, $this->getCustomer()->getFirstName());
         $this->preparedFillField($this->getLocator()->checkout->last_name, $this->getCustomer()->getLastName());
         $this->preparedFillField($this->getLocator()->checkout->email_address, $this->getCustomer()->getEmailAddress());
-        $this->checkOption($this->getLocator()->checkout->agree_to_terms_and_conditions_and_privacy_policy);
-        $this->preparedClick($this->getLocator()->checkout->continue);
-        $this->fillBillingDetails();
     }
 
     /**
@@ -149,6 +192,26 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
     public function getPaymentMethodConfigurationNameExceptions(): array
     {
         return $this->paymentMethodConfigurationNameExceptions;
+    }
+
+    /**
+     * @param $paymentMethod
+     * @return string
+     */
+    private function getActingPaymentMethod($paymentMethod)
+    {
+        if ($paymentMethod = 'CreditCardOneClick')
+        {
+            return 'CreditCard';
+        }
+        return $paymentMethod;
+    }
+
+    private function isCustomerRegistered()
+    {
+        $guest = $this->grabFromDatabase(self::CUSTOMER_TABLE, self::CUSTOMER_IS_GUEST_COLUMN_NAME,
+            [self::CUSTOMER_EMAIL_COLUMN_NAME => $this->getCustomer()->getEmailAddress()]);
+        return $guest == 0;
     }
 
 }
