@@ -20,9 +20,10 @@ interface iPrepareCheckout
     public function goToCheckout();
 
     /**
+     * @param $customerType
      * @return mixed
      */
-    public function fillCustomerDetails();
+    public function fillCustomerDetails($customerType);
 
     /**
      * @param string $paymentMethod

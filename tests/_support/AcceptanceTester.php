@@ -33,6 +33,8 @@ class AcceptanceTester extends Actor
 
     const CREDIT_CARD = 'creditCard';
 
+    const CREDIT_CARD_ONE_CLICK = 'creditCardOneClick';
+
     const PAY_PAL = 'payPal';
 
     //this is used to generate new class instance, so const doesn't work here
@@ -43,6 +45,7 @@ class AcceptanceTester extends Actor
 
     private $paymentMethodInstanceMap = [
         'CreditCard' => Step\Acceptance\PaymentMethod\CreditCardStep::class,
+        'CreditCardOneClick' => Step\Acceptance\PaymentMethod\CreditCardOneClickStep::class,
         'PayPal' => Step\Acceptance\PaymentMethod\PayPalStep::class
     ];
 
@@ -93,7 +96,6 @@ class AcceptanceTester extends Actor
     public function iActivatePaymentActionInConfiguration($paymentMethod, $paymentAction): void
     {
         $this->shopInstance->configurePaymentMethodCredentials($paymentMethod, $paymentAction);
-        $this->pause();
     }
 
     /**
@@ -111,18 +113,19 @@ class AcceptanceTester extends Actor
 
     /**
      * @Given I prepare checkout with purchase sum :minPurchaseSum in shop system as :arg2
+     * @param $minPurchaseSum
+     * @param $customerType
+     * @throws Exception
      */
     public function iPrepareCheckoutWithPurchaseSumInShopSystemAs($minPurchaseSum, $customerType)
     {
-
-        $this->pause();
         if ($customerType === 'registered customer')
         {
             $this->shopInstance->logIn();
         }
         $this->shopInstance->fillBasket($minPurchaseSum);
         $this->shopInstance->goToCheckout();
-        $this->shopInstance->fillCustomerDetails();
+        $this->shopInstance->fillCustomerDetails($customerType);
     }
 
 

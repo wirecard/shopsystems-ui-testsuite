@@ -4,7 +4,9 @@
     "checkout": "index.php?controller=order",
     "order_received": "order-confirmation",
     "register": "index.php?controller=authentication&create_account=1",
-    "log_out": "index.php?mylogout="
+    "log_out": "index.php?mylogout=",
+    "sign_in": "index.php?controller=authentication&back=my-account",
+    "my_account": "index.php?controller=my-account"
   },
   "product": {
     "price": "22.94",
@@ -43,5 +45,10 @@
   "register": {
     "save": "//button[@type='submit'][contains(@data-link-action, 'save-customer')]",
     "log_out": "//*[@class='logout hidden-sm-down]']"
+  },
+  "sign_in": {
+    "email": "//*[@name='email']",
+    "password": "//*[@name='password']",
+    "sign_in": "//*[@id='submit-login']"
   }
 }

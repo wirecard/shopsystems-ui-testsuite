@@ -2,9 +2,13 @@
 
 namespace Step\Acceptance\ShopSystem;
 
+
+use Facebook\WebDriver\Exception\TimeOutException;
 use Step\Acceptance\iConfigurePaymentMethod;
 use Step\Acceptance\iPrepareCheckout;
 use Step\Acceptance\iValidateSuccess;
+
+use Facebook\WebDriver\Exception\NoSuchElementException;
 
 use Exception as ExceptionAlias;
 
@@ -36,7 +40,7 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
 
     const CUSTOMER_IS_GUEST_COLUMN_NAME = 'is_guest';
 
-    const CUSTOMER_EMAIL_COLUMN_NAME = 'is_guest';
+    const CUSTOMER_EMAIL_COLUMN_NAME = 'email';
 
     /**
      * @var array
@@ -150,11 +154,16 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      * @return mixed
      * @throws ExceptionAlias
      */
-    public function fillCustomerDetails()
+    public function fillCustomerDetails($customerType)
     {
-        $this->fillMandatoryCustomerData();
-        $this->checkOption($this->getLocator()->checkout->agree_to_terms_and_conditions_and_privacy_policy);
-        $this->preparedClick($this->getLocator()->checkout->continue);
+        if ($customerType !== 'registered customer')
+        {
+            $this->fillUnregisteredCustomerDetails();
+        }
+        else
+        {
+            $this->preparedClick($this->getLocator()->checkout->continue2);
+         }
         $this->fillBillingDetails();
     }
 
@@ -175,17 +184,45 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      */
     public function fillBillingDetails()
     {
-        //if the first field is there, means the others too, so no need to prepare (it's faster)
-        $this->preparedFillField($this->getLocator()->checkout->street_address, $this->getCustomer()->getStreetAddress());
-        $this->preparedFillField($this->getLocator()->checkout->town, $this->getCustomer()->getTown());
-        $this->preparedFillField($this->getLocator()->checkout->post_code, $this->getCustomer()->getPostCode());
-        $this->preparedFillField($this->getLocator()->checkout->phone, $this->getCustomer()->getPhone());
-        $this->selectOption($this->getLocator()->checkout->country, $this->getCustomer()->getCountry());
-        $this->preparedClick($this->getLocator()->checkout->continue2);
+        try {
+            $this->preparedFillField($this->getLocator()->checkout->street_address, $this->getCustomer()->getStreetAddress());
+            $this->preparedFillField($this->getLocator()->checkout->town, $this->getCustomer()->getTown());
+            $this->preparedFillField($this->getLocator()->checkout->post_code, $this->getCustomer()->getPostCode());
+            $this->preparedFillField($this->getLocator()->checkout->phone, $this->getCustomer()->getPhone());
+            $this->selectOption($this->getLocator()->checkout->country, $this->getCustomer()->getCountry());
+            $this->preparedClick($this->getLocator()->checkout->continue2);
+        } catch (NoSuchElementException $e) {
+            //this means the address has already been saved
+        }
         //this button should appear on the next page, so wait till we see it
         $this->preparedClick($this->getLocator()->checkout->continue3, 60);
     }
 
+
+    /**
+     * @throws ExceptionAlias
+     */
+    public function fillUnregisteredCustomerDetails()
+    {
+        $this->fillMandatoryCustomerData();
+        $this->checkOption($this->getLocator()->checkout->agree_to_terms_and_conditions_and_privacy_policy);
+        $this->preparedClick($this->getLocator()->checkout->continue);
+    }
+
+    /**
+     * @throws ExceptionAlias
+     */
+    public function logIn()
+    {
+        $this->amOnPage($this->getLocator()->page->sign_in);
+        $currentUrl = $this->grabFromCurrentUrl();
+        if (! $this->isCustomerSignedIn())
+        {
+            $this->preparedFillField($this->getLocator()->sign_in->email, $this->getCustomer()->getEmailAddress());
+            $this->preparedFillField($this->getLocator()->sign_in->password, $this->getCustomer()->getPassword());
+            $this->preparedClick($this->getLocator()->sign_in->sign_in, 60);
+        }
+    }
     /**
      * @return array
      */
@@ -207,11 +244,25 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
         return $paymentMethod;
     }
 
-    private function isCustomerRegistered()
+    /**
+     * @return bool
+     */
+    private function isCustomerRegistered(): bool
     {
         $guest = $this->grabFromDatabase(self::CUSTOMER_TABLE, self::CUSTOMER_IS_GUEST_COLUMN_NAME,
             [self::CUSTOMER_EMAIL_COLUMN_NAME => $this->getCustomer()->getEmailAddress()]);
-        return $guest == 0;
+        return $guest === '0';
+    }
+
+    /**
+     * @return bool
+     */
+    private function isCustomerSignedIn(): bool
+    {
+        $this->wait(1);
+        $currentUrl = $this->grabFromCurrentUrl();
+        //otherwise we are already signed in
+        return strpos($currentUrl, $this->getLocator()->page->my_account) !== false;
     }
 
 }
