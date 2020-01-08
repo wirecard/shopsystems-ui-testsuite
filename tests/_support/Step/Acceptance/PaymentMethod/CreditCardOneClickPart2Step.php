@@ -6,7 +6,7 @@ namespace Step\Acceptance\PaymentMethod;
 
 use Exception;
 
-class CreditCardOneClickStep extends CreditCardStep
+class CreditCardOneClickPart2Step extends CreditCardStep
 {
     const STEP_NAME = 'CreditCard';
 
@@ -16,8 +16,7 @@ class CreditCardOneClickStep extends CreditCardStep
      */
     public function performPaymentActionsInTheShop()
     {
-        $this->pause();
-        parent::performPaymentActionsInTheShop();
-        $this->checkOption($this->getLocator()->save_for_later_use);
+        $this->preparedClick($this->getLocator()->use_saved_card);
+        $this->preparedClick($this->getLocator()->use_card);
     }
 }

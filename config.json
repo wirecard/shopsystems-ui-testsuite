@@ -4,6 +4,7 @@
   "currency": "EUR",
   "default_country": "AT",
   "creditcard_data": "CreditCardData.json",
-  "creditcardoneclick_data": "CreditCardOneClickData.json",
+  "creditcardoneclickpart1_data": "CreditCardOneClickData.json",
+  "creditcardoneclickpart2_data": "CreditCardOneClickData.json",
   "paypal_data": "PayPalData.json"
 }

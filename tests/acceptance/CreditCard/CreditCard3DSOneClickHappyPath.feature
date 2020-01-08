@@ -20,11 +20,13 @@ Feature: CreditCard3DSOneClickHappyPath
 
   @patch @minor @major
   Scenario: authorize
-    Given I perform "CreditCardOneClick" payment actions in the shop
+    Given I perform "CreditCardOneClickPart1" payment actions in the shop
     And I perform payment method actions outside of the shop
     And I see successful payment
     When I prepare checkout with purchase sum "100" in shop system as "registered customer"
-    And I perform "CreditCardOneClick" payment actions in the shop
+    Then I see "Wirecard Credit Card"
+    And I start "CreditCard" payment
+    And I perform "CreditCardOneClickPart2" payment actions in the shop
     And I perform payment method actions outside of the shop
     Then I see successful payment
     And I see "CreditCard" transaction type "authorization" in transaction table

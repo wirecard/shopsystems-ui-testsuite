@@ -1,8 +1,8 @@
 {
   "first_name": "test",
   "last_name": "test",
-  "card_number": "375987000000005",
-  "cvv": "1005",
+  "card_number": "3800010001000103",
+  "cvv": "103",
   "valid_until" : "0123",
   "password": "wirecard"
 }
