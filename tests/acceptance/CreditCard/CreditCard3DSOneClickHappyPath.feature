@@ -7,7 +7,7 @@ Feature: CreditCard3DSOneClickHappyPath
     Given I initialize shop system
     And I activate "CreditCardOneClick" payment action "reserve" in configuration
     And I prepare checkout with purchase sum "100" in shop system as "registered customer"
-    Then I see "Wirecard Credit Card"
+    And I see "Wirecard Credit Card"
     And I start "CreditCard" payment
 
   @prestashop

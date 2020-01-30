@@ -6,7 +6,7 @@ Feature: PayPalPurchaseHappyPath
   Background:
     Given I initialize shop system
     And I activate "PayPal" payment action "pay" in configuration
-    And I prepare checkout with purchase sum "100" in shop system as "guest"
+    And I prepare checkout with purchase sum "100" in shop system as "guest customer"
     And I see "Wirecard PayPal"
     And I start "PayPal" payment
 
