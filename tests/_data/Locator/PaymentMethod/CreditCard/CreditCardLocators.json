@@ -9,5 +9,6 @@
   "continue_button": "//*[@name='authenticate']",
   "save_for_later_use": "//*[@id='wirecard-store-card']",
   "use_saved_card": "//*[@id='stored-card']",
-  "use_card": "//*[@class='btn btn-success']"
+  "use_card": "//*[@class='btn btn-success']",
+  "use_different_card": "Use different card"
 }

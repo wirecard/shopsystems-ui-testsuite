@@ -64,8 +64,7 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
             $paymentAction,
             $this->getMappedPaymentActions(),
             $this->getGateway());
-        if ($paymentMethod === 'CreditCardOneClick')
-        {
+        if (strcasecmp($paymentMethod, static::CREDIT_CARD_ONE_CLICK) === 0) {
             //CreditCard One click is not a separate payment method but a configuration of CreditCard
             $db_config[self::CREDIT_CARD_ONE_CLICK_CONFIGURATION_OPTION] = '1';
         }
@@ -103,11 +102,10 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      */
     public function registerCustomer()
     {
-        if ( ! $this->isCustomerRegistered())
-        {
+        if (!$this->isCustomerRegistered()) {
             $this->amOnPage($this->getLocator()->page->register);
-            $this->fillMandatoryCustomerData();
-            $this->preparedFillField($this->getLocator()->checkout->password, $this->getCustomer()->getPassword());
+            $this->fillMandatoryCustomerData(static::REGISTERED_CUSTOMER);
+            $this->preparedFillField($this->getLocator()->checkout->password, $this->getCustomer(static::REGISTERED_CUSTOMER)->getPassword());
             $this->checkOption($this->getLocator()->checkout->agree_to_terms_and_conditions_and_privacy_policy);
             $this->preparedClick($this->getLocator()->register->save);
             $this->amOnPage($this->getLocator()->page->log_out);
@@ -151,45 +149,45 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
     }
 
     /**
+     * @param $customerType
      * @return mixed
      * @throws ExceptionAlias
      */
     public function fillCustomerDetails($customerType)
     {
-        if ($customerType !== 'registered customer')
-        {
-            $this->fillUnregisteredCustomerDetails();
-        }
-        else
-        {
+        if ($customerType !== static::REGISTERED_CUSTOMER) {
+            $this->fillUnregisteredCustomerDetails($customerType);
+        } else {
             $this->preparedClick($this->getLocator()->checkout->continue2);
-         }
-        $this->fillBillingDetails();
+        }
+        $this->fillBillingDetails($customerType);
     }
 
     /**
+     * @param $customerType
      * @throws ExceptionAlias
      */
-    public function fillMandatoryCustomerData()
+    public function fillMandatoryCustomerData($customerType)
     {
         $this->selectOption($this->getLocator()->checkout->social_title, '1');
-        $this->preparedFillField($this->getLocator()->checkout->first_name, $this->getCustomer()->getFirstName());
-        $this->preparedFillField($this->getLocator()->checkout->last_name, $this->getCustomer()->getLastName());
-        $this->preparedFillField($this->getLocator()->checkout->email_address, $this->getCustomer()->getEmailAddress());
+        $this->preparedFillField($this->getLocator()->checkout->first_name, $this->getCustomer($customerType)->getFirstName());
+        $this->preparedFillField($this->getLocator()->checkout->last_name, $this->getCustomer($customerType)->getLastName());
+        $this->preparedFillField($this->getLocator()->checkout->email_address, $this->getCustomer($customerType)->getEmailAddress());
     }
 
     /**
      *
+     * @param $customerType
      * @throws ExceptionAlias
      */
-    public function fillBillingDetails()
+    public function fillBillingDetails($customerType)
     {
         try {
-            $this->preparedFillField($this->getLocator()->checkout->street_address, $this->getCustomer()->getStreetAddress());
-            $this->preparedFillField($this->getLocator()->checkout->town, $this->getCustomer()->getTown());
-            $this->preparedFillField($this->getLocator()->checkout->post_code, $this->getCustomer()->getPostCode());
-            $this->preparedFillField($this->getLocator()->checkout->phone, $this->getCustomer()->getPhone());
-            $this->selectOption($this->getLocator()->checkout->country, $this->getCustomer()->getCountry());
+            $this->preparedFillField($this->getLocator()->checkout->street_address, $this->getCustomer($customerType)->getStreetAddress());
+            $this->preparedFillField($this->getLocator()->checkout->town, $this->getCustomer($customerType)->getTown());
+            $this->preparedFillField($this->getLocator()->checkout->post_code, $this->getCustomer($customerType)->getPostCode());
+            $this->preparedFillField($this->getLocator()->checkout->phone, $this->getCustomer($customerType)->getPhone());
+            $this->selectOption($this->getLocator()->checkout->country, $this->getCustomer($customerType)->getCountry());
             $this->preparedClick($this->getLocator()->checkout->continue2);
         } catch (NoSuchElementException $e) {
             //this means the address has already been saved
@@ -202,9 +200,9 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
     /**
      * @throws ExceptionAlias
      */
-    public function fillUnregisteredCustomerDetails()
+    public function fillUnregisteredCustomerDetails($customerType)
     {
-        $this->fillMandatoryCustomerData();
+        $this->fillMandatoryCustomerData($customerType);
         $this->checkOption($this->getLocator()->checkout->agree_to_terms_and_conditions_and_privacy_policy);
         $this->preparedClick($this->getLocator()->checkout->continue);
     }
@@ -216,13 +214,13 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
     {
         $this->amOnPage($this->getLocator()->page->sign_in);
         $currentUrl = $this->grabFromCurrentUrl();
-        if (! $this->isCustomerSignedIn())
-        {
-            $this->preparedFillField($this->getLocator()->sign_in->email, $this->getCustomer()->getEmailAddress());
-            $this->preparedFillField($this->getLocator()->sign_in->password, $this->getCustomer()->getPassword());
+        if (!$this->isCustomerSignedIn()) {
+            $this->preparedFillField($this->getLocator()->sign_in->email, $this->getCustomer(static::REGISTERED_CUSTOMER)->getEmailAddress());
+            $this->preparedFillField($this->getLocator()->sign_in->password, $this->getCustomer(static::REGISTERED_CUSTOMER)->getPassword());
             $this->preparedClick($this->getLocator()->sign_in->sign_in, 60);
         }
     }
+
     /**
      * @return array
      */
@@ -235,10 +233,9 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      * @param $paymentMethod
      * @return string
      */
-    private function getActingPaymentMethod($paymentMethod)
+    private function getActingPaymentMethod($paymentMethod): string
     {
-        if ($paymentMethod = 'CreditCardOneClick')
-        {
+        if (strcasecmp($paymentMethod, static::CREDIT_CARD_ONE_CLICK) === 0) {
             return 'CreditCard';
         }
         return $paymentMethod;
@@ -250,7 +247,7 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
     private function isCustomerRegistered(): bool
     {
         $guest = $this->grabFromDatabase(self::CUSTOMER_TABLE, self::CUSTOMER_IS_GUEST_COLUMN_NAME,
-            [self::CUSTOMER_EMAIL_COLUMN_NAME => $this->getCustomer()->getEmailAddress()]);
+            [self::CUSTOMER_EMAIL_COLUMN_NAME => $this->getCustomer(self::REGISTERED_CUSTOMER)->getEmailAddress()]);
         return $guest === '0';
     }
 

@@ -3,14 +3,6 @@ Feature: CreditCard3DSOneClickHappyPath
   I want to make a one-click checkout with a Credit Card 3DS
   And to see that transaction was successful
 
-
-#Scenario: authorize
-#    Given I initialize shop system
-#    And I activate "CreditCardOneClick" payment action "reserve" in configuration
-#    And I prepare checkout with purchase sum "100" in shop system as "registered customer"
-#    Then I see "Wirecard Credit Card"
-#    And I start "CreditCard" payment
-
   Background:
     Given I initialize shop system
     And I activate "CreditCardOneClick" payment action "reserve" in configuration
@@ -18,15 +10,16 @@ Feature: CreditCard3DSOneClickHappyPath
     Then I see "Wirecard Credit Card"
     And I start "CreditCard" payment
 
-  @patch @minor @major
+  @prestashop
   Scenario: authorize
-    Given I perform "CreditCardOneClickPart1" payment actions in the shop
-    And I perform payment method actions outside of the shop
+    When I fill "CreditCardOneClick" fields in the shop
+    And I save "CreditCardOneClick" for later use
+    And I perform "CreditCard" actions outside of the shop
     And I see successful payment
-    When I prepare checkout with purchase sum "100" in shop system as "registered customer"
-    Then I see "Wirecard Credit Card"
+    And I prepare checkout with purchase sum "100" in shop system as "registered customer"
+    And I see "Wirecard Credit Card"
     And I start "CreditCard" payment
-    And I perform "CreditCardOneClickPart2" payment actions in the shop
-    And I perform payment method actions outside of the shop
+    And I choose "CreditCardOneClick" from saved cards list
+    And I perform "CreditCard" actions outside of the shop
     Then I see successful payment
     And I see "CreditCard" transaction type "authorization" in transaction table

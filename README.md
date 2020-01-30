@@ -43,7 +43,7 @@ To run tests locally:
         `BROWSERSTACK_ACCESS_KEY`
 6. Start codeception 
     
-    `vendor/bin/codecept run acceptance  --debug --html`
+    `vendor/bin/codecept run acceptance -g ${SHOP_SYSTEM} --debug --html `
 
 Configuring test data
 =====

@@ -16,7 +16,12 @@ class GenericShopSystemStep extends GenericStep
     /**
      * @var CustomerConfig;
      */
-    private $customer;
+    private $guestCustomer;
+
+    /**
+     * @var CustomerConfig;
+     */
+    private $registeredCustomer;
 
     /**
      * @var array
@@ -51,23 +56,26 @@ class GenericShopSystemStep extends GenericStep
      * GenericStep constructor.
      * @param Scenario $scenario
      * @param $gateway
-     * @param $customerDataFileName
+     * @param $guestCustomerDataFileName
+     * @param $registeredCustomerDataFileName
      */
-    public function __construct(Scenario $scenario, $gateway, $customerDataFileName)
+    public function __construct(Scenario $scenario, $gateway, $guestCustomerDataFileName, $registeredCustomerDataFileName)
     {
         parent::__construct($scenario, $gateway);
         $this->setLocator($this->getDataFromDataFile($this->getFullPath(FileSytem::SHOP_SYSTEM_LOCATOR_FOLDER_PATH . static::STEP_NAME . DIRECTORY_SEPARATOR . static::STEP_NAME . 'Locators.json')));
        //TODO will need to have 2 customer objects - one guest - one not guest
-        $this->createCustomerObject($customerDataFileName);
+        $this->createCustomerObjects($guestCustomerDataFileName, $registeredCustomerDataFileName);
     }
 
     /**
-     * @param $dataFileName
+     * @param $guestCustomerDataFileName
+     * @param $registeredCustomerDataFileName
      */
-    public function createCustomerObject($dataFileName): void
+    public function createCustomerObjects($guestCustomerDataFileName, $registeredCustomerDataFileName): void
     {
         $dataFolderPath = $this->getFullPath(FileSytem::CUSTOMER_DATA_FOLDER_PATH);
-        $this->customer = new CustomerConfig($this->getDataFromDataFile($dataFolderPath . $dataFileName));
+        $this->guestCustomer = new CustomerConfig($this->getDataFromDataFile($dataFolderPath . $guestCustomerDataFileName));
+        $this->registeredCustomer = new CustomerConfig($this->getDataFromDataFile($dataFolderPath . $registeredCustomerDataFileName));
     }
 
     /**
@@ -183,12 +191,25 @@ class GenericShopSystemStep extends GenericStep
         return in_array($paymentMethod, $this->getRedirectPaymentMethods(), false);
     }
 
+//    /**
+//     * @return mixed
+//     */
+//    public function getGuestCustomer()
+//    {
+//        return $this->guestCustomer;
+//    }
+
     /**
+     * @param $customerType
      * @return mixed
      */
-    public function getCustomer()
+    public function getCustomer($customerType)
     {
-        return $this->customer;
+        if ($customerType === static::REGISTERED_CUSTOMER)
+        {
+            return $this->registeredCustomer;
+        }
+        return $this->guestCustomer;
     }
 
     /**
