@@ -12,19 +12,17 @@ class CreditCardOneClickStep extends CreditCardStep
     const STEP_NAME = 'CreditCard';
 
     /**
-     * @return mixed
      * @throws Exception
      */
-    public function saveForLaterUse()
+    public function saveForLaterUse(): void
     {
         $this->checkOption($this->getLocator()->save_for_later_use);
     }
 
     /**
-     * @return mixed
      * @throws Exception
      */
-    public function chooseCardFromSavedCardsList()
+    public function chooseCardFromSavedCardsList() : void
     {
         $this->preparedClick($this->getLocator()->use_saved_card);
         $this->preparedClick($this->getLocator()->use_card);

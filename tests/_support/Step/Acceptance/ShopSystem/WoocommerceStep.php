@@ -49,19 +49,17 @@ class WoocommerceStep extends GenericShopSystemStep implements iConfigurePayment
     }
 
     /**
-     * @return mixed
      */
     public function registerCustomer()
     {
-
+        //TODO implement this when working on Woocommerce one-click
     }
 
     /**
      * @param String $paymentMethod
-     * @return mixed
      * @throws Exception
      */
-    public function startPayment($paymentMethod)
+    public function startPayment($paymentMethod): void
     {
         $this->wait(2);
         $paymentMethodRadioButtonLocator  = 'wirecard_' . strtolower($paymentMethod);
@@ -74,10 +72,9 @@ class WoocommerceStep extends GenericShopSystemStep implements iConfigurePayment
 
     /**
      * @param String $paymentMethod
-     * @return mixed
      * @throws Exception
      */
-    public function proceedWithPayment($paymentMethod)
+    public function proceedWithPayment($paymentMethod): void
     {
         if (!$this->isRedirectPaymentMethod($paymentMethod)) {
             $this->preparedClick($this->getLocator()->order_pay->pay);
@@ -86,10 +83,9 @@ class WoocommerceStep extends GenericShopSystemStep implements iConfigurePayment
 
     /**
      * @param $customerType
-     * @return mixed
      * @throws Exception
      */
-    public function fillCustomerDetails($customerType)
+    public function fillCustomerDetails($customerType): void
     {
         //woocommerce is dynamically loading possible payment methods while filling form, so we need to make sure all elements are fillable or clickable
         $this->preparedFillField($this->getLocator()->checkout->first_name, $this->getCustomer($customerType)->getFirstName());

@@ -30,8 +30,8 @@
     "creditcard_form" : "//input[@type='radio'][contains(@data-module-name, 'wd-creditcard')]",
     "paypal_form" : "//input[@type='radio'][contains(@data-module-name, 'wd-paypal')]",
     "continue" : "//button[@type='submit'][contains(@data-link-action, 'register-new-customer')]",
-    "continue2": "//*[@name='confirm-addresses']",
-    "continue3": "//*[@name='confirmDeliveryOption']",
+    "continue_confirm_address": "//*[@name='confirm-addresses']",
+    "continue_confirm_delivery": "//*[@name='confirmDeliveryOption']",
     "agree_to_terms_and_conditions_and_privacy_policy": "//*[@name='psgdpr']",
     "agree_with_terms_of_service":  "//*[@name='conditions_to_approve[terms-and-conditions]']",
     "order_with_obligation_to_pay": "//*[@class='btn btn-primary center-block']"

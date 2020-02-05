@@ -79,7 +79,7 @@ class AcceptanceTester extends Actor
     {
         $usedShopEnvVariable = getenv('SHOP_SYSTEM');
         if (!$usedShopEnvVariable) {
-            throw new \RuntimeException('Environment variable SHOP_SYSTEM is not set');
+            throw new RuntimeException('Environment variable SHOP_SYSTEM is not set');
         }
         $this->configData = $this->getDataFromDataFile($this->getFullPath(FileSytem::CONFIG_FILE));
         $this->gateway = $this->configData->gateway;
@@ -151,6 +151,7 @@ class AcceptanceTester extends Actor
 
     /**
      * @When I save :paymentMethod for later use
+     * @param $paymentMethod
      * @throws Exception
      */
     public function iSaveForLaterUse($paymentMethod): void
@@ -161,6 +162,7 @@ class AcceptanceTester extends Actor
 
     /**
      * @When I choose :paymentMethod from saved cards list
+     * @param $paymentMethod
      * @throws Exception
      */
     public function iChooseFromSavedCardsList($paymentMethod): void
@@ -224,7 +226,7 @@ class AcceptanceTester extends Actor
     private function createShopSystemInstance($shopSystemName): GenericShopSystemStep
     {
         if (!$this->isShopSystemSupported($shopSystemName)) {
-            throw new \RuntimeException('Environment variable SHOP_SYSTEM is not set or requested shop system is not supported');
+            throw new RuntimeException('Environment variable SHOP_SYSTEM is not set or requested shop system is not supported');
         }
         /** @var GenericShopSystemStep $shopInstance */
         $shopInstance = new $this->shopInstanceMap[$shopSystemName]($this->getScenario(), $this->gateway, $this->configData->guest_customer_data, $this->configData->registered_customer_data);
