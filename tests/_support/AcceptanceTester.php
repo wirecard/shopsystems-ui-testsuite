@@ -99,19 +99,6 @@ class AcceptanceTester extends Actor
         $this->shopInstance->configurePaymentMethodCredentials($paymentMethod, $paymentAction);
     }
 
-//    /**
-//     * @Given I prepare checkout with purchase sum :minPurchaseSum in shop system
-//     * @param $minPurchaseSum
-//     * @throws Exception
-//     */
-//    public function iPrepareCheckoutWithPurchaseSumInShopSystem($minPurchaseSum): void
-//    {
-//        $this->shopInstance->fillBasket($minPurchaseSum);
-//        $this->shopInstance->goToCheckout();
-//        $this->shopInstance->fillCustomerDetails();
-//    }
-
-
     /**
      * @Given I prepare checkout with purchase sum :minPurchaseSum in shop system as :arg2
      * @param $minPurchaseSum
@@ -127,7 +114,6 @@ class AcceptanceTester extends Actor
         $this->shopInstance->goToCheckout();
         $this->shopInstance->fillCustomerDetails($customerType);
     }
-
 
     /**
      * @Then I see :text

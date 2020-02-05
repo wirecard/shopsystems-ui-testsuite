@@ -191,14 +191,6 @@ class GenericShopSystemStep extends GenericStep
         return in_array($paymentMethod, $this->getRedirectPaymentMethods(), false);
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getGuestCustomer()
-//    {
-//        return $this->guestCustomer;
-//    }
-
     /**
      * @param $customerType
      * @return mixed
