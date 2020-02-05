@@ -37,10 +37,10 @@ To run tests locally:
      `DB_NAME`
         
      `SHOP_URL`
-        
+       
 6. Start codeception 
     
-    `vendor/bin/codecept run acceptance -g ${SHOP_SYSTEM} --debug --html `
+    `vendor/bin/codecept run acceptance -g ${SHOP_SYSTEM} --debug --html`
 
 Configuring test data
 =====

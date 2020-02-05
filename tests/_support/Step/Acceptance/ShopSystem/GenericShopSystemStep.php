@@ -57,25 +57,25 @@ class GenericShopSystemStep extends GenericStep
      * @param Scenario $scenario
      * @param $gateway
      * @param $guestCustomerDataFileName
-     * @param $registeredCustomerDataFileName
+     * @param $regCustomerDataFileName
      */
-    public function __construct(Scenario $scenario, $gateway, $guestCustomerDataFileName, $registeredCustomerDataFileName)
+    public function __construct(Scenario $scenario, $gateway, $guestCustomerDataFileName, $regCustomerDataFileName)
     {
         parent::__construct($scenario, $gateway);
         $this->setLocator($this->getDataFromDataFile($this->getFullPath(FileSytem::SHOP_SYSTEM_LOCATOR_FOLDER_PATH . static::STEP_NAME . DIRECTORY_SEPARATOR . static::STEP_NAME . 'Locators.json')));
        //TODO will need to have 2 customer objects - one guest - one not guest
-        $this->createCustomerObjects($guestCustomerDataFileName, $registeredCustomerDataFileName);
+        $this->createCustomerObjects($guestCustomerDataFileName, $regCustomerDataFileName);
     }
 
     /**
      * @param $guestCustomerDataFileName
-     * @param $registeredCustomerDataFileName
+     * @param $regCustomerDataFileName
      */
-    public function createCustomerObjects($guestCustomerDataFileName, $registeredCustomerDataFileName): void
+    public function createCustomerObjects($guestCustomerDataFileName, $regCustomerDataFileName): void
     {
         $dataFolderPath = $this->getFullPath(FileSytem::CUSTOMER_DATA_FOLDER_PATH);
         $this->guestCustomer = new CustomerConfig($this->getDataFromDataFile($dataFolderPath . $guestCustomerDataFileName));
-        $this->registeredCustomer = new CustomerConfig($this->getDataFromDataFile($dataFolderPath . $registeredCustomerDataFileName));
+        $this->registeredCustomer = new CustomerConfig($this->getDataFromDataFile($dataFolderPath . $regCustomerDataFileName));
     }
 
     /**

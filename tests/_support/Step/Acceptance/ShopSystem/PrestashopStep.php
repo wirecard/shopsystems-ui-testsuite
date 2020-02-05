@@ -149,16 +149,15 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
     }
 
     /**
-     * @param $customerType
-     * @return mixed
+     * @param string $customerType
      * @throws ExceptionAlias
      */
-    public function fillCustomerDetails($customerType)
+    public function fillCustomerDetails($customerType): void
     {
-        if ($customerType !== static::REGISTERED_CUSTOMER) {
-            $this->fillUnregisteredCustomerDetails($customerType);
-        } else {
+        if ($customerType === static::REGISTERED_CUSTOMER) {
             $this->preparedClick($this->getLocator()->checkout->continue2);
+        } else {
+            $this->fillUnregisteredCustomerDetails($customerType);
         }
         $this->fillBillingDetails($customerType);
     }
@@ -200,7 +199,7 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
     /**
      * @throws ExceptionAlias
      */
-    public function fillUnregisteredCustomerDetails($customerType)
+    public function  fillUnregisteredCustomerDetails($customerType)
     {
         $this->fillMandatoryCustomerData($customerType);
         $this->checkOption($this->getLocator()->checkout->agree_to_terms_and_conditions_and_privacy_policy);
@@ -213,7 +212,6 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
     public function logIn()
     {
         $this->amOnPage($this->getLocator()->page->sign_in);
-        $currentUrl = $this->grabFromCurrentUrl();
         if (!$this->isCustomerSignedIn()) {
             $this->preparedFillField($this->getLocator()->sign_in->email, $this->getCustomer(static::REGISTERED_CUSTOMER)->getEmailAddress());
             $this->preparedFillField($this->getLocator()->sign_in->password, $this->getCustomer(static::REGISTERED_CUSTOMER)->getPassword());
