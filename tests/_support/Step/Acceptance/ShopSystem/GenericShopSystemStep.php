@@ -204,12 +204,12 @@ class GenericShopSystemStep extends GenericStep
     }
 
     /**
-     * @param array $paymentMethod
+     * @param string $paymentMethod
      * @return mixed
      */
     public function getMappedTxTableValuesForPaymentMethod($paymentMethod)
     {
-       return $this->getMappedPaymentActions()[$paymentMethod]['tx_table'];
+        return $this->getMappedPaymentActions()[$paymentMethod]['tx_table'];
     }
 
 
