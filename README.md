@@ -21,13 +21,12 @@ To run tests locally:
     git clone https://github.com/wirecard/shopsystems-ui-testsuite.git
     
     cd shopsystems-ui-testsuite
- 
 
-4. Install codeception
-    
-    `composer install codeception/codeception`
+4. Install codeception   
+    `composer install codeception/codeception`  
+
 5. Export environment variables
-
+    
     `SHOP_SYSTEM = prestashop #(or woocommerce)`
         
      `DB_HOST`
@@ -36,10 +35,9 @@ To run tests locally:
         
      `DB_NAME`
         
-     `SHOP_URL`  
-          
-6. Start codeception 
-    
+     `SHOP_URL`           
+
+6. Start codeception   
     `vendor/bin/codecept run acceptance -g ${SHOP_SYSTEM} --debug --html`
 
 Configuring test data
