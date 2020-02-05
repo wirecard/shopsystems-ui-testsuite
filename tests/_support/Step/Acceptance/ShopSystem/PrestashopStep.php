@@ -96,7 +96,7 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      * @return mixed
      * @throws ExceptionAlias
      */
-    public function registerCustomer():void
+    public function registerCustomer(): void
     {
         if (!$this->isCustomerRegistered()) {
             $this->amOnPage($this->getLocator()->page->register);
@@ -113,7 +113,7 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      * @return mixed
      * @throws ExceptionAlias
      */
-    public function startPayment($paymentMethod):void
+    public function startPayment($paymentMethod): void
     {
         $paymentMethodName = strtolower($paymentMethod) . '_name';
         $paymentMethodForm = strtolower($paymentMethod) . '_form';
@@ -128,7 +128,7 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      * @return mixed
      * @throws ExceptionAlias
      */
-    public function proceedWithPayment($paymentMethod): void
+    public function proceedWithPayment($paymentMethod = ''): void
     {
         $this->checkOption($this->getLocator()->checkout->agree_with_terms_of_service);
         $this->preparedClick($this->getLocator()->checkout->order_with_obligation_to_pay);
@@ -150,10 +150,9 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      */
     public function fillCustomerDetails($customerType): void
     {
+        $this->fillUnregisteredCustomerDetails($customerType);
         if ($customerType === static::REGISTERED_CUSTOMER) {
             $this->preparedClick($this->getLocator()->checkout->continue_confirm_address);
-        } else {
-            $this->fillUnregisteredCustomerDetails($customerType);
         }
         $this->fillBillingDetails($customerType);
     }
@@ -196,11 +195,13 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      * @param string $customerType
      * @throws ExceptionAlias
      */
-    public function  fillUnregisteredCustomerDetails($customerType)
+    public function fillUnregisteredCustomerDetails($customerType)
     {
-        $this->fillMandatoryCustomerData($customerType);
-        $this->checkOption($this->getLocator()->checkout->agree_to_terms_and_conditions_and_privacy_policy);
-        $this->preparedClick($this->getLocator()->checkout->continue);
+        if ($customerType !== static::REGISTERED_CUSTOMER) {
+            $this->fillMandatoryCustomerData($customerType);
+            $this->checkOption($this->getLocator()->checkout->agree_to_terms_and_conditions_and_privacy_policy);
+            $this->preparedClick($this->getLocator()->checkout->continue);
+        }
     }
 
     /**
