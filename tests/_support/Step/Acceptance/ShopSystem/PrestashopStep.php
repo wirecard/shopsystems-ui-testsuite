@@ -4,6 +4,7 @@ namespace Step\Acceptance\ShopSystem;
 
 
 use Facebook\WebDriver\Exception\TimeOutException;
+use PHPUnit\Exception;
 use Step\Acceptance\iConfigurePaymentMethod;
 use Step\Acceptance\iPrepareCheckout;
 use Step\Acceptance\iValidateSuccess;
@@ -54,16 +55,11 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      * @param String $paymentMethod
      * @param String $paymentAction
      * @return mixed|void
-     * @throws Exception
      */
     public function configurePaymentMethodCredentials($paymentMethod, $paymentAction)
     {
         $actingPaymentMethod = $this->getActingPaymentMethod($paymentMethod);
-        $db_config = $this->buildPaymentMethodConfig(
-            $actingPaymentMethod,
-            $paymentAction,
-            $this->getMappedPaymentActions(),
-            $this->getGateway());
+        $db_config = $this->buildPaymentMethodConfig($actingPaymentMethod, $paymentAction, $this->getMappedPaymentActions(), $this->getGateway());
         if (strcasecmp($paymentMethod, static::CREDIT_CARD_ONE_CLICK) === 0) {
             //CreditCard One click is not a separate payment method but a configuration of CreditCard
             $db_config[self::CREDIT_CARD_ONE_CLICK_CONFIGURATION_OPTION] = '1';
@@ -100,7 +96,7 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      * @return mixed
      * @throws ExceptionAlias
      */
-    public function registerCustomer()
+    public function registerCustomer():void
     {
         if (!$this->isCustomerRegistered()) {
             $this->amOnPage($this->getLocator()->page->register);
@@ -117,7 +113,7 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      * @return mixed
      * @throws ExceptionAlias
      */
-    public function startPayment($paymentMethod)
+    public function startPayment($paymentMethod):void
     {
         $paymentMethodName = strtolower($paymentMethod) . '_name';
         $paymentMethodForm = strtolower($paymentMethod) . '_form';
@@ -132,7 +128,7 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      * @return mixed
      * @throws ExceptionAlias
      */
-    public function proceedWithPayment($paymentMethod)
+    public function proceedWithPayment($paymentMethod): void
     {
         $this->checkOption($this->getLocator()->checkout->agree_with_terms_of_service);
         $this->preparedClick($this->getLocator()->checkout->order_with_obligation_to_pay);
@@ -155,7 +151,7 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
     public function fillCustomerDetails($customerType): void
     {
         if ($customerType === static::REGISTERED_CUSTOMER) {
-            $this->preparedClick($this->getLocator()->checkout->continue2);
+            $this->preparedClick($this->getLocator()->checkout->continue_confirm_address);
         } else {
             $this->fillUnregisteredCustomerDetails($customerType);
         }
@@ -187,16 +183,17 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
             $this->preparedFillField($this->getLocator()->checkout->post_code, $this->getCustomer($customerType)->getPostCode());
             $this->preparedFillField($this->getLocator()->checkout->phone, $this->getCustomer($customerType)->getPhone());
             $this->selectOption($this->getLocator()->checkout->country, $this->getCustomer($customerType)->getCountry());
-            $this->preparedClick($this->getLocator()->checkout->continue2);
+            $this->preparedClick($this->getLocator()->checkout->continue_confirm_address);
         } catch (NoSuchElementException $e) {
             //this means the address has already been saved
         }
         //this button should appear on the next page, so wait till we see it
-        $this->preparedClick($this->getLocator()->checkout->continue3, 60);
+        $this->preparedClick($this->getLocator()->checkout->continue_confirm_delivery, 60);
     }
 
 
     /**
+     * @param string $customerType
      * @throws ExceptionAlias
      */
     public function  fillUnregisteredCustomerDetails($customerType)
