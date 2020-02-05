@@ -130,8 +130,10 @@ class PrestashopStep extends GenericShopSystemStep implements iConfigurePaymentM
      */
     public function proceedWithPayment($paymentMethod): void
     {
-        $this->checkOption($this->getLocator()->checkout->agree_with_terms_of_service);
-        $this->preparedClick($this->getLocator()->checkout->order_with_obligation_to_pay);
+        if ($paymentMethod !== '') {
+            $this->checkOption($this->getLocator()->checkout->agree_with_terms_of_service);
+            $this->preparedClick($this->getLocator()->checkout->order_with_obligation_to_pay);
+        }
     }
 
     /**
