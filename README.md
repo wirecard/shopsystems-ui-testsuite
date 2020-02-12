@@ -22,8 +22,12 @@ To run tests locally:
     
     cd shopsystems-ui-testsuite
 
-4. Install codeception   
-    `composer require codeception/codeception --dev`  
+4. Install codeception and it's dependencies 
+    ```
+    composer require codeception/module-webdriver --dev
+    composer require codeception/module-asserts --dev
+    composer require codeception/module-db --dev
+    composer require codeception/codeception --dev  
 
 5. Export environment variables
     
