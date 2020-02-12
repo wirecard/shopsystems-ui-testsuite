@@ -23,7 +23,7 @@ To run tests locally:
     cd shopsystems-ui-testsuite
 
 4. Install codeception   
-    `composer install codeception/codeception`  
+    `composer require codeception/codeception --dev`  
 
 5. Export environment variables
     
@@ -34,6 +34,10 @@ To run tests locally:
      `DB_PORT`
         
      `DB_NAME`
+     
+     `DB_USER`
+             
+     `DB_PASSWORD`
         
      `SHOP_URL`           
 
