@@ -25,6 +25,8 @@ class CreditCardOneClickStep extends CreditCardStep
     public function chooseCardFromSavedCardsList() : void
     {
         $this->preparedClick($this->getLocator()->use_saved_card);
+        $this->wait(10);
+        $this->selectOption($this->getLocator()->cc_token, $this->grabTextFrom($this->getLocator()->cc_token_text));
         $this->preparedClick($this->getLocator()->use_card);
         //make sure that credit card form is loaded again and we're ready to proceed
         $this->switchToCreditCardUIFrame();
