@@ -1,13 +1,13 @@
-Feature: CreditCardHappyPath
-  As a guest  user
-  I want to make an Authorization and Purchase with a Credit Card
-  And to see that transaction was successful
+Feature: CreditCardInitialTransactionHappyPath
+  As a guest user
+  I want to make an initial transaction with a Credit Card
+  And to see that initial transaction was successful
 
   Background:
     Given I initialize shop system
 
   @woocommerce @prestashop
-  Scenario Outline: transactionNon3DS
+  Scenario Outline: initial transaction Non 3DS
     Given I activate "CreditCard" payment action <payment_action> in configuration
     And I prepare checkout with purchase sum <amount> in shop system as "guest customer"
     And I see "Wirecard Credit Card"
@@ -22,7 +22,7 @@ Feature: CreditCardHappyPath
       |      "pay"      |  "10"  |    "purchase"    |
 
   @woocommerce @prestashop
-  Scenario Outline: transaction3DS
+  Scenario Outline: initial transaction 3DS
     Given I activate "CreditCard" payment action <payment_action> in configuration
     And I prepare checkout with purchase sum <amount> in shop system as "guest customer"
     And I see "Wirecard Credit Card"
