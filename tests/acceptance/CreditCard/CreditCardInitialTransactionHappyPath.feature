@@ -6,7 +6,6 @@ Feature: CreditCardInitialTransactionHappyPath
   Background:
     Given I initialize shop system
 
-  @woocommerce @prestashop @magento2
   Scenario Outline: initial transaction Non 3DS
     Given I activate "CreditCard" payment action <payment_action> in configuration
     And I prepare checkout with purchase sum <amount> in shop system as "guest customer"
@@ -21,7 +20,6 @@ Feature: CreditCardInitialTransactionHappyPath
       |    "reserve"    |  "20"  |  "authorization" |
       |      "pay"      |  "20"  |    "purchase"    |
 
-  @woocommerce @prestashop @magento2 @major @minor @patch
   Scenario Outline: initial transaction 3DS
     Given I activate "CreditCard" payment action <payment_action> in configuration
     And I prepare checkout with purchase sum <amount> in shop system as "guest customer"
