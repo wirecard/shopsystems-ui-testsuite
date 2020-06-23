@@ -8,7 +8,7 @@ Feature: AlipayCrossBorderInitialTransaction
 
   @woocommerce
   Scenario Outline: initial transaction
-    #And I activate "Alipay-Xborder" payment action <payment_action> in configuration
+    And I activate "Alipay-Xborder" payment action <payment_action> in configuration
     And I prepare checkout with purchase sum "100" in shop system as "guest customer"
     And I see "Wirecard Alipay Cross-Border"
     And I start "AlipayCrossBorder" payment
