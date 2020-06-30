@@ -6,7 +6,7 @@ Feature: GuaranteedInvoiceInitialTransactionHappyPath
   Background:
     Given I initialize shop system
 
-  @woocommerce
+  @woocommerce @test_group_1
   Scenario Outline: initial transaction
     And I activate "GuaranteedInvoice" payment action <payment_action> in configuration
     And I prepare checkout with purchase sum "100" in shop system as "registered customer"

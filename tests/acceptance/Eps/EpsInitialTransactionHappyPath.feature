@@ -6,7 +6,7 @@ Feature: EpsInitialTransactionHappyPath
   Background:
     Given I initialize shop system
 
-  @woocommerce
+  @woocommerce @test_group_1
   Scenario Outline: initial transaction
     Given I activate "eps-Überweisung" payment action <payment_action> in configuration
     And I prepare checkout with purchase sum <amount> in shop system as "guest customer"

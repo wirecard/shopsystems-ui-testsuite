@@ -6,7 +6,7 @@ Feature: PaymentOnInvoice/PaymentInAdvanceInitialTransactionHappyPath
   Background:
     Given I initialize shop system
 
-  @woocommerce
+  @woocommerce @test_group_3
   Scenario Outline: initial transaction
     And I activate "PaymentOnInvoice/PaymentInAdvance" payment action <payment_type> in configuration
     And I prepare checkout with purchase sum <amount> in shop system as "registered customer"

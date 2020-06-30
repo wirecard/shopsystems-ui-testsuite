@@ -6,7 +6,7 @@ Feature: SofortInitialTransaction
   Background:
     Given I initialize shop system
 
-  @woocommerce
+  @woocommerce @test_group_3
   Scenario Outline: initial transaction
     And I activate "Sofort." payment action <payment_action> in configuration
     And I prepare checkout with purchase sum "100" in shop system as "guest customer"
