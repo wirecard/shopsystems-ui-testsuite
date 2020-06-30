@@ -6,7 +6,7 @@ Feature: iDealInitialTransaction
   Background:
     Given I initialize shop system
 
-  @woocommerce @test_group_1
+  @woocommerce
   Scenario Outline: initial transaction
     And I activate "iDEAL" payment action <payment_action> in configuration
     And I prepare checkout with purchase sum "100" in shop system as "guest customer"

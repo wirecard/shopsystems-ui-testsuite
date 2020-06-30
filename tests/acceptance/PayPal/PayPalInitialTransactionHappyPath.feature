@@ -6,7 +6,7 @@ Feature: PayPalInitialTransaction
   Background:
     Given I initialize shop system
 
-  @woocommerce @prestashop @magento2 @test_group_3
+  @woocommerce @prestashop @magento2
   Scenario Outline: initial transaction
     And I activate "PayPal" payment action <payment_action> in configuration
     And I prepare checkout with purchase sum "100" in shop system as "guest customer"
