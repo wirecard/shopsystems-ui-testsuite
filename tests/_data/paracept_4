@@ -1,0 +1,2 @@
+tests/acceptance/iDEAL/IdealInitialTransactionHappyPath.feature
+tests/acceptance/Eps/EpsInitialTransactionHappyPath.feature

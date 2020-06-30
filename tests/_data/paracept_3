@@ -1,0 +1,2 @@
+tests/acceptance/PaymentOnInvoicePaymentInAdvance/PaymentOnInvoicePaymentInAdvanceInitialTransactionHappyPath.feature
+tests/acceptance/PayPal/PayPalInitialTransactionHappyPath.feature

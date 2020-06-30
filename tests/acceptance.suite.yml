@@ -50,3 +50,38 @@ env:
             'browserstack.key': '%BROWSERSTACK_ACCESS_KEY%'
         Db:
           dsn: 'mysql:host=%DB_HOST%:%DB_PORT%;dbname=%DB_NAME%;charset=utf8'
+#  env1:
+#    modules:
+#      config:
+#        Db:
+##          dsn: 'mysql:dbname=testdb_1;host=127.0.0.1'
+#        WebDriver:
+##          url: 'http://test1.localhost/'
+#  env2:
+#    modules:
+#      config:
+#        Db:
+##          dsn: 'mysql:dbname=testdb_2;host=127.0.0.1'
+#        WebDriver:
+##          url: 'http://test2.localhost/'
+#  env3:
+#    modules:
+#      config:
+#        Db:
+##          dsn: 'mysql:dbname=testdb_3;host=127.0.0.1'
+#        WebDriver:
+##          url: 'http://test3.localhost/'
+#  env4:
+#    modules:
+#      config:
+#        Db:
+##          dsn: 'mysql:dbname=testdb_4;host=127.0.0.1'
+#        WebDriver:
+##          url: 'http://test4.localhost/'
+#  env5:
+#    modules:
+#      config:
+#        Db:
+##          dsn: 'mysql:dbname=testdb_5;host=127.0.0.1'
+#        WebDriver:
+##          url: 'http://test5.localhost/'

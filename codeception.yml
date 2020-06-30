@@ -4,9 +4,17 @@ paths:
     data: tests/_data
     support: tests/_support
     envs: tests/_envs
+
 actor_suffix: Tester
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
 params:
     - env
+groups:
+#    paracept_1: [tests/acceptance/GuaranteedInvoice/GuaranteedInvoiceInitialTransactionHappyPath.feature, tests/acceptance/Sofort/SofortInitialTransactionHappyPath.feature, tests/acceptance/CreditCard/CreditCardConfigurationHappyPath.feature]
+    paracept_1: tests/_data/paracept_1
+    paracept_2: tests/_data/paracept_2
+    paracept_3: tests/_data/paracept_3
+    paracept_4: tests/_data/paracept_4
+    paracept_5: tests/_data/paracept_5

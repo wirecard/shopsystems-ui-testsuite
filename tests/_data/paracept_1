@@ -1,0 +1,3 @@
+tests/acceptance/GuaranteedInvoice/GuaranteedInvoiceInitialTransactionHappyPath.feature
+tests/acceptance/Sofort/SofortInitialTransactionHappyPath.feature
+tests/acceptance/CreditCard/CreditCardConfigurationHappyPath.feature

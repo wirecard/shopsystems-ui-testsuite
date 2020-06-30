@@ -1,0 +1,3 @@
+tests/acceptance/giropay/giropayInitialTransactionHappyPath.feature
+tests/acceptance/SEPADirectDebit/SEPADirectDebitInitialTransactionHappyPath.feature
+tests/acceptance/CreditCard/CreditCardOneClickInitialTransactionHappyPath.feature
