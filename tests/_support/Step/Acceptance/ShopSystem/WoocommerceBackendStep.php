@@ -270,12 +270,12 @@ class WoocommerceBackendStep extends GenericShopSystemStep
      */
     public function validateTransactionFields($paymentMethod, $paymentAction): void
     {
-        $mappedPaymentMethod = $this->mapTransactionFieldPaymentMethod($paymentMethod);
+        $mappedPaymentMethod = $this->mapPaymentMethodTransactionField($paymentMethod);
 
-        $this->seeInDatabase(static::TRANSACTION_TABLE_NAME, [static::TRANSACTION_ORDER_ID => $this->getTransactionLocators()['order_id'],
-            static::TRANSACTION_CURRENCY => $this->getTransactionLocators()['currency'],
+        $this->seeInDatabase(static::TRANSACTION_TABLE_NAME, [static::TRANSACTION_ORDER_ID => $this->getTransactionFieldsFromSuccessPage()['order_id'],
+            static::TRANSACTION_CURRENCY => $this->getTransactionFieldsFromSuccessPage()['currency'],
             static::TRANSACTION_TYPE_COLUMN_NAME=> $paymentAction,
-            static::TRANSACTION_AMOUNT => $this->getTransactionLocators()['amount'],
+            static::TRANSACTION_AMOUNT => $this->getTransactionFieldsFromSuccessPage()['amount'],
             static::TRANSACTION_PAYMENT_METHOD=> strtolower($mappedPaymentMethod),
             static::PARENT_TRANSACTION_ID => '',
             static::TRANSACTION_STATE . ' !=' => '',
@@ -283,7 +283,7 @@ class WoocommerceBackendStep extends GenericShopSystemStep
             static::TX_ID . ' !=' => '']);
     }
 
-    public function getTransactionLocators() {
+    public function getTransactionFieldsFromSuccessPage() {
         $orderId = $this->grabTextFrom($this->getLocator()->transaction_fields->order_id);
         $currency = $this->grabTextFrom($this->getLocator()->transaction_fields->currency);
         $amount = $this->grabTextFrom($this->getLocator()->transaction_fields->amount);
@@ -299,7 +299,7 @@ class WoocommerceBackendStep extends GenericShopSystemStep
      * @param $paymentMethod
      * @return mixed
      */
-    public function mapTransactionFieldPaymentMethod($paymentMethod) {
+    public function mapPaymentMethodTransactionField($paymentMethod) {
         if (array_key_exists($paymentMethod, $this->mappedPaymentMethodTransactionField)) {
             $paymentMethod = $this->mappedPaymentMethodTransactionField[$paymentMethod];
         }
