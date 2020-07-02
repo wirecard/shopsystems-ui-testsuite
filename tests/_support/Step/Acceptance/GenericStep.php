@@ -143,6 +143,19 @@ class GenericStep extends AcceptanceTester
     }
 
     /**
+     * @param $locator
+     * @return bool
+     * @throws \Codeception\Exception\ModuleException
+     */
+    public function waitUntilIframeLoaded($locator): bool
+    {
+        $wirecardFrame = $this->executeJS(
+            'return document.querySelector("#' . $locator[0] . '")'
+        );
+        return !($wirecardFrame === null);
+    }
+
+    /**
      * @param mixed $locator
      */
     public function setLocator($locator): void
