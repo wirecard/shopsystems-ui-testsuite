@@ -15,7 +15,7 @@ Feature: CreditCardInitialTransactionHappyPath
     And I place the order and continue "CreditCard" payment
     When I fill "CreditCard" fields in the shop
     Then I see successful payment
-    And I check values for "CreditCard" and <transaction_type> transaction type
+    And I see "CreditCard" transaction type <transaction_type> in transaction table
 
     Examples:
       | payment_action  | amount | transaction_type |
