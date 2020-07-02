@@ -100,7 +100,7 @@ class WoocommerceBackendStep extends GenericShopSystemStep
     /**
      * @var array
      */
-    private $mappedPaymentMethodTransactionField =
+    private $paymentMethodFields =
         [
             'GuaranteedInvoice' => 'ratepay-invoice',
             'eps-Überweisung' => 'eps',
@@ -111,7 +111,7 @@ class WoocommerceBackendStep extends GenericShopSystemStep
     /**
      * @var array
      */
-    private $mappedCurrencyTransactionField =
+    private $currencyFields =
         [
             '€' => 'EUR',
             '$' => 'USD'
@@ -272,7 +272,8 @@ class WoocommerceBackendStep extends GenericShopSystemStep
     {
         $mappedPaymentMethod = $this->mapPaymentMethodTransactionField($paymentMethod);
 
-        $this->seeInDatabase(static::TRANSACTION_TABLE_NAME, [static::TRANSACTION_ORDER_ID => $this->getTransactionFieldsFromSuccessPage()['order_id'],
+        $this->seeInDatabase(static::TRANSACTION_TABLE_NAME,
+            [static::TRANSACTION_ORDER_ID => $this->getTransactionFieldsFromSuccessPage()['order_id'],
             static::TRANSACTION_CURRENCY => $this->getTransactionFieldsFromSuccessPage()['currency'],
             static::TRANSACTION_TYPE_COLUMN_NAME=> $paymentAction,
             static::TRANSACTION_AMOUNT => $this->getTransactionFieldsFromSuccessPage()['amount'],
@@ -283,14 +284,15 @@ class WoocommerceBackendStep extends GenericShopSystemStep
             static::TX_ID . ' !=' => '']);
     }
 
-    public function getTransactionFieldsFromSuccessPage() {
+    public function getTransactionFieldsFromSuccessPage()
+    {
         $orderId = $this->grabTextFrom($this->getLocator()->transaction_fields->order_id);
         $currency = $this->grabTextFrom($this->getLocator()->transaction_fields->currency);
         $amount = $this->grabTextFrom($this->getLocator()->transaction_fields->amount);
 
         return [
             'order_id' => $orderId,
-            'currency' => str_replace($currency, $this->mappedCurrencyTransactionField[$currency], $currency),
+            'currency' => str_replace($currency, $this->currencyFields[$currency], $currency),
             'amount' => str_replace($currency, "", $amount)
         ];
     }
@@ -299,9 +301,10 @@ class WoocommerceBackendStep extends GenericShopSystemStep
      * @param $paymentMethod
      * @return mixed
      */
-    public function mapPaymentMethodTransactionField($paymentMethod) {
-        if (array_key_exists($paymentMethod, $this->mappedPaymentMethodTransactionField)) {
-            $paymentMethod = $this->mappedPaymentMethodTransactionField[$paymentMethod];
+    public function mapPaymentMethodTransactionField($paymentMethod)
+    {
+        if (array_key_exists($paymentMethod, $this->paymentMethodFields)) {
+            $paymentMethod = $this->paymentMethodFields[$paymentMethod];
         }
 
         return $paymentMethod;
