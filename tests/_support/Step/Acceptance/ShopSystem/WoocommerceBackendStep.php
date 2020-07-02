@@ -272,7 +272,8 @@ class WoocommerceBackendStep extends GenericShopSystemStep
     {
         $mappedPaymentMethod = $this->mapPaymentMethodTransactionField($paymentMethod);
 
-        $this->seeInDatabase(static::TRANSACTION_TABLE_NAME,
+        $this->seeInDatabase(
+            static::TRANSACTION_TABLE_NAME,
             [static::TRANSACTION_ORDER_ID => $this->getTransactionFieldsFromSuccessPage()['order_id'],
             static::TRANSACTION_CURRENCY => $this->getTransactionFieldsFromSuccessPage()['currency'],
             static::TRANSACTION_TYPE_COLUMN_NAME=> $paymentAction,
@@ -281,7 +282,9 @@ class WoocommerceBackendStep extends GenericShopSystemStep
             static::PARENT_TRANSACTION_ID => '',
             static::TRANSACTION_STATE . ' !=' => '',
             static::TRANSACTION_ID . ' !=' => '',
-            static::TX_ID . ' !=' => '']);
+            static::TX_ID . ' !=' => ''
+            ]
+        );
     }
 
     public function getTransactionFieldsFromSuccessPage()
