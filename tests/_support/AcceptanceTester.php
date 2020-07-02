@@ -409,4 +409,14 @@ class AcceptanceTester extends Actor
         $this->createPaymentMethodIfNeeded($paymentMethod);
         $this->paymentMethod->performAdditionalPaymentStepsInsideTheShop();
     }
+
+    /**
+     * @Given I check values for :paymentMethod and :paymentAction transaction type
+     * @param $paymentMethod
+     * @param $paymentAction
+     */
+    public function iNoteTheOrderDetailsAndCheckTransactionValuesInDatabase($paymentMethod, $paymentAction)
+    {
+        $this->shopInstance->validateTransactionFields($paymentMethod, $paymentAction);
+    }
 }

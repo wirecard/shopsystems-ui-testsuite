@@ -81,6 +81,42 @@ class WoocommerceBackendStep extends GenericShopSystemStep
 
     const PAYMENT_ACTION_FIELD_NAME = 'payment_action';
 
+    const TRANSACTION_ORDER_ID = 'order_id';
+
+    const TRANSACTION_CURRENCY = 'currency';
+
+    const TRANSACTION_AMOUNT = 'amount';
+
+    const TRANSACTION_PAYMENT_METHOD = 'payment_method';
+
+    const PARENT_TRANSACTION_ID = 'parent_transaction_id';
+
+    const TRANSACTION_STATE = 'transaction_state';
+
+    const TRANSACTION_ID = 'transaction_id';
+
+    const TX_ID = 'tx_id';
+
+    /**
+     * @var array
+     */
+    private $mappedPaymentMethodTransactionField =
+        [
+            'GuaranteedInvoice' => 'ratepay-invoice',
+            'eps-Überweisung' => 'eps',
+            'PaymentOnInvoice/PaymentInAdvance' => 'wiretransfer',
+            'Sofort.' => 'sofortbanking'
+        ];
+
+    /**
+     * @var array
+     */
+    private $mappedCurrencyTransactionField =
+        [
+            '€' => 'EUR',
+            '$' => 'USD'
+        ];
+
     /**
      * @param String $paymentMethod
      * @param String $optionName
@@ -226,5 +262,48 @@ class WoocommerceBackendStep extends GenericShopSystemStep
             return;
         }
         $this->seeInField($this->getLocator()->$pageLocator->$elLocator, $elValue);
+    }
+
+    /**
+     * @param $paymentMethod
+     * @param $paymentAction
+     */
+    public function validateTransactionFields($paymentMethod, $paymentAction): void
+    {
+        $mappedPaymentMethod = $this->mapTransactionFieldPaymentMethod($paymentMethod);
+
+        $this->seeInDatabase(static::TRANSACTION_TABLE_NAME, [static::TRANSACTION_ORDER_ID => $this->getTransactionLocators()['order_id'],
+            static::TRANSACTION_CURRENCY => $this->getTransactionLocators()['currency'],
+            static::TRANSACTION_TYPE_COLUMN_NAME=> $paymentAction,
+            static::TRANSACTION_AMOUNT => $this->getTransactionLocators()['amount'],
+            static::TRANSACTION_PAYMENT_METHOD=> strtolower($mappedPaymentMethod),
+            static::PARENT_TRANSACTION_ID => '',
+            static::TRANSACTION_STATE . ' !=' => '',
+            static::TRANSACTION_ID . ' !=' => '',
+            static::TX_ID . ' !=' => '']);
+    }
+
+    public function getTransactionLocators() {
+        $orderId = $this->grabTextFrom($this->getLocator()->transaction_fields->order_id);
+        $currency = $this->grabTextFrom($this->getLocator()->transaction_fields->currency);
+        $amount = $this->grabTextFrom($this->getLocator()->transaction_fields->amount);
+
+        return [
+            'order_id' => $orderId,
+            'currency' => str_replace($currency, $this->mappedCurrencyTransactionField[$currency], $currency),
+            'amount' => str_replace($currency, "", $amount)
+        ];
+    }
+
+    /**
+     * @param $paymentMethod
+     * @return mixed
+     */
+    public function mapTransactionFieldPaymentMethod($paymentMethod) {
+        if (array_key_exists($paymentMethod, $this->mappedPaymentMethodTransactionField)) {
+            $paymentMethod = $this->mappedPaymentMethodTransactionField[$paymentMethod];
+        }
+
+        return $paymentMethod;
     }
 }
