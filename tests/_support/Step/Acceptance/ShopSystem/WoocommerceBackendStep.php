@@ -287,6 +287,9 @@ class WoocommerceBackendStep extends GenericShopSystemStep
         );
     }
 
+    /**
+     * @return array
+     */
     public function getTransactionFieldsFromSuccessPage()
     {
         $orderId = $this->grabTextFrom($this->getLocator()->transaction_fields->order_id);
@@ -302,7 +305,7 @@ class WoocommerceBackendStep extends GenericShopSystemStep
 
     /**
      * @param $paymentMethod
-     * @return mixed
+     * @return string
      */
     public function mapPaymentMethodTransactionField($paymentMethod)
     {
