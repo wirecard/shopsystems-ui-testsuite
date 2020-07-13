@@ -86,5 +86,10 @@
   },
   "merchant_configuration": {
     "successfully_tested": "Merchant configuration was successfully tested."
+  },
+  "transaction_fields" : {
+    "order_id": ".woocommerce-order-overview__order strong",
+    "currency": ".woocommerce-Price-currencySymbol",
+    "amount": ".woocommerce-order-overview .woocommerce-order-overview__total .woocommerce-Price-amount"
   }
 }
