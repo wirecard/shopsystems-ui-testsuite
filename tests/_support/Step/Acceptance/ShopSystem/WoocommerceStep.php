@@ -120,9 +120,8 @@ class WoocommerceStep extends WoocommerceAdministrationStep implements
         if (strcasecmp($paymentMethod, static::GUARANTEED_INVOICE) !== 0) {
             $paymentMethod = $this->getActingPaymentMethod($paymentMethod);
         }
-        $this->wait(2);
         $paymentMethodRadioButtonLocator  = 'wirecard_' . strtolower($paymentMethod);
-        $this->preparedClick($this->getLocator()->checkout->$paymentMethodRadioButtonLocator);
+        $this->preparedClick($this->getLocator()->checkout->$paymentMethodRadioButtonLocator, 5);
     }
 
     /**
