@@ -8,5 +8,6 @@
     "pay_now": "//*[@id='confirmButtonTop']",
     "continue": "//*[@class='btn full confirmButton continueButton']",
     "accept_cookies": "//*[@id='acceptAllButton']",
-    "payment_page_text": "Hi, Wirecardbuyer!"
+    "payment_page_text": "Hi, Wirecardbuyer!",
+    "login_page": "//*[@class='btn full ng-binding']"
 }
