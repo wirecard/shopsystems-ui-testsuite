@@ -38,7 +38,10 @@ class PayPalStep extends GenericPaymentMethodStep implements iPerformPayment
     {
         $this->waitUntil(60, [$this, 'waitUntilPageLoaded'], [$this->getLocator()->page]);
         $this->preparedClick($this->getLocator()->accept_cookies, 80);
-        $this->preparedClick($this->getLocator()->login_page);
+        try {
+            $this->preparedClick($this->getLocator()->login_page, 10);
+        } catch (NoSuchElementException $e) {
+        }
         $this->waitUntil(60, [$this, 'waitUntilPageLoaded'], [$this->getLocator()->page]);
         $this->preparedFillField($this->getLocator()->email, $this->getPaymentMethod()->getUserName());
         //sometimes we can enter password in the same page with username and sometimes we have to click "Next"
