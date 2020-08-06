@@ -31,6 +31,8 @@ class CreditCardOneClickStep extends CreditCardStep
         } catch (Exception $e) {
             $this->wait(10);
             $this->reloadPage();
+            $this->wait(10);
+            $this->reloadPage();
             $this->performChoosingCard($shopSystem);
             $this->switchToCreditCardUIFrame();
         }
