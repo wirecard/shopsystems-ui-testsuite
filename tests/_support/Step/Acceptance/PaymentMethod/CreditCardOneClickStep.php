@@ -26,7 +26,13 @@ class CreditCardOneClickStep extends CreditCardStep
     {
         $this->performChoosingCard($shopSystem);
         //make sure that credit card form is loaded again and we're ready to proceed
-        $this->switchToCreditCardUIFrame();
+        try {
+            $this->switchToCreditCardUIFrame();
+        } catch (Exception $e) {
+            $this->reloadPage();
+            $this->performChoosingCard($shopSystem);
+            $this->switchToCreditCardUIFrame();
+        }
         $this->waitForText($this->getLocator()->use_different_card);
         //sometimes we need to fill cvv
         try {
