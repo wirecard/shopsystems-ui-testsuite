@@ -77,7 +77,7 @@ jobs:
         shell: bash
         env:
           GITHUB_RUN_ID: ${{ github.run_id }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
       - name: Add failure label
         if: ${{ failure() }}
         uses: wirecard/add-remove-label@v1
@@ -92,4 +92,4 @@ jobs:
         env:
           SLACK_ROOMS: ${{ secrets.SLACK_ROOMS }}
           GITHUB_RUN_ID: ${{ github.run_id }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
