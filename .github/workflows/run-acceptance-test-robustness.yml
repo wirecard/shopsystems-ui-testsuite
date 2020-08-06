@@ -48,7 +48,7 @@ jobs:
         id: file
         with:
           format: space-delimited
-          token: ${{ secrets.WORKFLOW_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Export feature file
         shell: bash
         run: echo "::set-env name=FEATURE_FILES::${{ steps.file.outputs.all }}"
@@ -68,7 +68,7 @@ jobs:
         if: ${{ success() }}
         uses: wirecard/add-remove-label@v1
         with:
-          token: ${{secrets.WORKFLOW_TOKEN}}
+          token: ${{secrets.GITHUB_TOKEN}}
           label: unstable acceptance test detected
           type: remove
       - name: Acceptance tests passed
@@ -77,12 +77,12 @@ jobs:
         shell: bash
         env:
           GITHUB_RUN_ID: ${{ github.run_id }}
-          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Add failure label
         if: ${{ failure() }}
         uses: wirecard/add-remove-label@v1
         with:
-          token: ${{secrets.WORKFLOW_TOKEN}}
+          token: ${{secrets.GITHUB_TOKEN}}
           label: unstable acceptance test detected
           type: add
       - name: Acceptance tests failed
@@ -92,4 +92,4 @@ jobs:
         env:
           SLACK_ROOMS: ${{ secrets.SLACK_ROOMS }}
           GITHUB_RUN_ID: ${{ github.run_id }}
-          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
