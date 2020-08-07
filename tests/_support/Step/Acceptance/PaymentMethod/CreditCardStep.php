@@ -52,7 +52,7 @@ class CreditCardStep extends GenericPaymentMethodStep implements iPerformPayment
     {
         //wait for frame to load
         $this->waitUntil(
-            30,
+            10,
             [$this, 'waitUntilIframeLoaded'],
             [$this->getLocator()->frame]
         );
@@ -62,7 +62,7 @@ class CreditCardStep extends GenericPaymentMethodStep implements iPerformPayment
             'return document.querySelector("#' . $this->getLocator()->frame . '")'
         );
         if ($wirecardFrame === null) {
-            throw new Exception();
+            return false;
         }
         $this->assertNotEquals($wirecardFrame, null, 'Is IFrame loaded?');
 
@@ -71,5 +71,6 @@ class CreditCardStep extends GenericPaymentMethodStep implements iPerformPayment
             'return document.querySelector("#' . $this->getLocator()->frame . '").getAttribute("name")'
         );
         $this->switchToIFrame($wirecardFrameName);
+        return true;
     }
 }
