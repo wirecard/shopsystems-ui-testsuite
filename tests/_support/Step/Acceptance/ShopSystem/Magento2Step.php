@@ -209,11 +209,15 @@ class Magento2Step extends GenericShopSystemStep implements iConfigurePaymentMet
         }
         try {
             $this->preparedClick($this->getLocator()->checkout->next, 80);
-        } catch (UnknownServerException $e) {
+        } catch (Exception $e) {
             $this->wait(10);
             $this->preparedClick($this->getLocator()->checkout->next, 80);
         }
         $this->waitUntil(60, [$this, 'waitUntilPageLoaded'], [$this->getLocator()->page->payment]);
+        if (strpos($this->executeJS("return location.href"), $this->getLocator()->page->payment) === false) {
+            $this->preparedClick($this->getLocator()->checkout->next, 80);
+            $this->waitUntil(60, [$this, 'waitUntilPageLoaded'], [$this->getLocator()->page->payment]);
+        }
         $this->wait(3);
     }
 
