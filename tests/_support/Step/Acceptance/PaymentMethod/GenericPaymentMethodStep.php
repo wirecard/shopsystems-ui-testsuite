@@ -66,7 +66,8 @@ class GenericPaymentMethodStep extends GenericStep
     {
         $dataFolderPath = $this->getFullPath(FileSytem::PAYMENT_METHOD_DATA_FOLDER_PATH);
         $this->paymentMethod = new $this->configObjectMap[$type](
-            $this->getDataFromDataFile($dataFolderPath . $dataFileName));
+            $this->getDataFromDataFile($dataFolderPath . $dataFileName)
+        );
     }
 
     /**
