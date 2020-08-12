@@ -63,12 +63,19 @@ class AcceptanceTester extends Actor
     const SEPADIRECTDEBIT = 'sEPADirectDebit';
 
     //this is used to generate new class instance, so const doesn't work here
+    /**
+     * @var Environment
+     */
+    public $env;
+    /**
+     * @var string
+     */
+    public $shopInstanceName;
     private $shopInstanceMap = [
         'prestashop' => Step\Acceptance\ShopSystem\PrestashopStep::class,
         'woocommerce' => Step\Acceptance\ShopSystem\WoocommerceStep::class,
         'magento2' => Step\Acceptance\ShopSystem\Magento2Step::class,
     ];
-
     private $paymentMethodInstanceMap = [
         'CreditCard' => Step\Acceptance\PaymentMethod\CreditCardStep::class,
         'CreditCardOneClick' => Step\Acceptance\PaymentMethod\CreditCardOneClickStep::class,
@@ -81,17 +88,6 @@ class AcceptanceTester extends Actor
         'eps-Überweisung' => Step\Acceptance\PaymentMethod\EpsStep::class,
         'SEPADirectDebit' => Step\Acceptance\PaymentMethod\SEPADirectDebitStep::class
     ];
-
-    /**
-     * @var Environment
-     */
-    public $env;
-
-    /**
-     * @var string
-     */
-    public $shopInstanceName;
-
     /**
      * @var Actor|PrestashopStep|WoocommerceStep|Magento2Step
      */
@@ -125,6 +121,46 @@ class AcceptanceTester extends Actor
         if (!$this->shopInstance) {
             $this->shopInstance = $this->createShopSystemInstance($this->shopInstanceName);
         }
+    }
+
+    /**
+     * @param $shopSystemName
+     * @return GenericShopSystemStep
+     */
+    private function createShopSystemInstance($shopSystemName): GenericShopSystemStep
+    {
+        if (!$this->isShopSystemSupported($shopSystemName)) {
+            throw new RuntimeException(
+                'Environment variable SHOP_SYSTEM is not set or requested shop system is not supported'
+            );
+        }
+        /** @var GenericShopSystemStep $shopInstance */
+        $shopInstance = new $this->shopInstanceMap[$shopSystemName]($this->getScenario(),
+            $this->gateway,
+            $this->configData->guest_customer_data,
+            $this->configData->registered_customer_data,
+            $this->configData->admin_data);
+        $shopInstance->configureShopSystemCurrencyAndCountry(
+            $this->configData->currency,
+            $this->configData->default_country
+        );
+        $shopInstance->registerCustomer();
+        $shopInstance->configureShippingZone(
+            $this->configData->shipping_zone_name,
+            $this->configData->shipping_zone_region,
+            $this->configData->shipping_zone_method,
+            $this->configData->shipping_zone_location_type
+        );
+        return $shopInstance;
+    }
+
+    /**
+     * @param $shopSystemName
+     * @return bool
+     */
+    private function isShopSystemSupported($shopSystemName): bool
+    {
+        return array_key_exists($shopSystemName, $this->shopInstanceMap);
     }
 
     /**
@@ -191,6 +227,46 @@ class AcceptanceTester extends Actor
     }
 
     /**
+     * @param $paymentMethod
+     */
+    private function createPaymentMethodIfNeeded($paymentMethod): void
+    {
+        if (!$this->paymentMethodCreated($paymentMethod)) {
+            $this->paymentMethod = $this->createPaymentMethod($paymentMethod);
+        }
+    }
+
+    /**
+     * @param $paymentMethod
+     * @return bool
+     */
+    private function paymentMethodCreated($paymentMethod): bool
+    {
+        if ($this->paymentMethod !== null) {
+            return $this->paymentMethod::STEP_NAME === $paymentMethod;
+        }
+        return false;
+    }
+
+    /**
+     * @param $paymentMethod
+     * @return GenericPaymentMethodStep
+     */
+    private function createPaymentMethod($paymentMethod): GenericPaymentMethodStep
+    {
+        //tell which payment method data to use and initialize customer config
+        // in locators.json we use payment method names as prefix, like creditcard_data
+        $paymentMethodDataName = strtolower($paymentMethod . '_data');
+        //all php variables are camel case
+        $paymentMethodInstance = new $this->paymentMethodInstanceMap[$paymentMethod](
+            $this->getScenario(),
+            $this->gateway,
+            //all php variables are camel case
+            lcfirst($paymentMethod), $this->configData->$paymentMethodDataName);
+        return $paymentMethodInstance;
+    }
+
+    /**
      * @When I save :paymentMethod for later use
      * @param $paymentMethod
      * @throws Exception
@@ -250,92 +326,11 @@ class AcceptanceTester extends Actor
     }
 
     /**
-     * @param $paymentMethod
-     * @return GenericPaymentMethodStep
-     */
-    private function createPaymentMethod($paymentMethod): GenericPaymentMethodStep
-    {
-        //tell which payment method data to use and initialize customer config
-        // in locators.json we use payment method names as prefix, like creditcard_data
-        $paymentMethodDataName = strtolower($paymentMethod . '_data');
-        //all php variables are camel case
-        $paymentMethodInstance = new $this->paymentMethodInstanceMap[$paymentMethod](
-            $this->getScenario(),
-            $this->gateway,
-            //all php variables are camel case
-            lcfirst($paymentMethod), $this->configData->$paymentMethodDataName);
-
-        return $paymentMethodInstance;
-    }
-
-    /**
-     * @param $shopSystemName
-     * @return GenericShopSystemStep
-     */
-    private function createShopSystemInstance($shopSystemName): GenericShopSystemStep
-    {
-        if (!$this->isShopSystemSupported($shopSystemName)) {
-            throw new RuntimeException(
-                'Environment variable SHOP_SYSTEM is not set or requested shop system is not supported'
-            );
-        }
-        /** @var GenericShopSystemStep $shopInstance */
-        $shopInstance = new $this->shopInstanceMap[$shopSystemName]($this->getScenario(),
-                                                                    $this->gateway,
-                                                                    $this->configData->guest_customer_data,
-                                                                    $this->configData->registered_customer_data,
-                                                                    $this->configData->admin_data);
-        $shopInstance->configureShopSystemCurrencyAndCountry(
-            $this->configData->currency,
-            $this->configData->default_country
-        );
-        $shopInstance->registerCustomer();
-        $shopInstance->configureShippingZone(
-            $this->configData->shipping_zone_name,
-            $this->configData->shipping_zone_region,
-            $this->configData->shipping_zone_method,
-            $this->configData->shipping_zone_location_type
-        );
-        return $shopInstance;
-    }
-
-    /**
-     * @param $shopSystemName
-     * @return bool
-     */
-    private function isShopSystemSupported($shopSystemName): bool
-    {
-        return array_key_exists($shopSystemName, $this->shopInstanceMap);
-    }
-
-    /**
-     * @param $paymentMethod
-     * @return bool
-     */
-    private function paymentMethodCreated($paymentMethod): bool
-    {
-        if ($this->paymentMethod !== null) {
-            return $this->paymentMethod::STEP_NAME === $paymentMethod;
-        }
-        return false;
-    }
-
-    /**
-     * @param $paymentMethod
-     */
-    private function createPaymentMethodIfNeeded($paymentMethod): void
-    {
-        if (!$this->paymentMethodCreated($paymentMethod)) {
-            $this->paymentMethod = $this->createPaymentMethod($paymentMethod);
-        }
-    }
-
-    /**
      * @When I place the order and continue :paymentMethod payment
      * @param $paymentMethod
      * @throws Exception
      */
-    public function iPlaceTheOrderAndContinuePayment($paymentMethod) :void
+    public function iPlaceTheOrderAndContinuePayment($paymentMethod): void
     {
         $this->shopInstance->placeTheOrder($paymentMethod);
     }

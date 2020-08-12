@@ -65,13 +65,13 @@ class GenericPaymentMethodStep extends GenericStep
     public function createPaymentMethodObject($type, $dataFileName): void
     {
         $dataFolderPath = $this->getFullPath(FileSytem::PAYMENT_METHOD_DATA_FOLDER_PATH);
-        $this->paymentMethod = new $this->configObjectMap[$type](
-            $this->getDataFromDataFile($dataFolderPath . $dataFileName));
+        $this->paymentMethod = new $this->configObjectMap[$type]
+        ($this->getDataFromDataFile($dataFolderPath . $dataFileName));
     }
 
     /**
-     *@return GenericConfig| CreditCardConfig| PayPalConfig| IdealConfig| GuaranteedInvoiceConfig| SofortConfig
-     *@return GiropayConfig| SEPADirectDebitConfig
+     * @return GenericConfig| CreditCardConfig| PayPalConfig| IdealConfig| GuaranteedInvoiceConfig| SofortConfig
+     * @return GiropayConfig| SEPADirectDebitConfig
      */
     public function getPaymentMethod()
     {
