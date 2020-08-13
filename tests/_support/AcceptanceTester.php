@@ -263,7 +263,9 @@ class AcceptanceTester extends Actor
             $this->getScenario(),
             $this->gateway,
             //all php variables are camel case
-            lcfirst($paymentMethod), $this->configData->$paymentMethodDataName);
+            lcfirst($paymentMethod),
+            $this->configData->$paymentMethodDataName
+        );
 
         return $paymentMethodInstance;
     }
@@ -280,11 +282,13 @@ class AcceptanceTester extends Actor
             );
         }
         /** @var GenericShopSystemStep $shopInstance */
-        $shopInstance = new $this->shopInstanceMap[$shopSystemName]($this->getScenario(),
-                                                                    $this->gateway,
-                                                                    $this->configData->guest_customer_data,
-                                                                    $this->configData->registered_customer_data,
-                                                                    $this->configData->admin_data);
+        $shopInstance = new $this->shopInstanceMap[$shopSystemName](
+            $this->getScenario(),
+            $this->gateway,
+            $this->configData->guest_customer_data,
+            $this->configData->registered_customer_data,
+            $this->configData->admin_data
+        );
         $shopInstance->configureShopSystemCurrencyAndCountry(
             $this->configData->currency,
             $this->configData->default_country

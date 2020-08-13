@@ -121,7 +121,7 @@ class GenericStep extends AcceptanceTester
         try {
             $this->seeOptionIsSelected($selectorDetails[0], $selectorDetails[1]);
             return true;
-        } catch (AssertionFailedError $e) {
+        } catch (Exception $e) {
             $this->selectOption($selectorDetails[0], $selectorDetails[1]);
             return false;
         }
