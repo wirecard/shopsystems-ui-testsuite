@@ -25,6 +25,7 @@ class CreditCardOneClickStep extends CreditCardStep
     public function chooseCardFromSavedCardsList($shopSystem) : void
     {
         $this->performChoosingCard($shopSystem);
+    //    $this->pause();
         $returnStatus = $this->switchToCreditCardUIFrame();
         if (! $returnStatus) {
             $this->reloadPage();
@@ -39,13 +40,12 @@ class CreditCardOneClickStep extends CreditCardStep
             $returnStatus = $this->switchToCreditCardUIFrame();
             $counter++;
         }
-//        $this->pause();
         $this->switchToCreditCardUIFrame();
         $this->waitForText($this->getLocator()->use_different_card);
         //sometimes we need to fill cvv
         try {
             $this->fillField($this->getLocator()->cvv, $this->getPaymentMethod()->getCvv());
-        } catch (TimeOutException $e) {
+        } catch (Exception $e) {
         }
         $this->switchToIFrame();
     }
