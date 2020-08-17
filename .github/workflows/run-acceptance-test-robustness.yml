@@ -52,6 +52,12 @@ jobs:
       - name: Export feature file
         shell: bash
         run: echo "::set-env name=FEATURE_FILES::${{ steps.file.outputs.all }}"
+      - name: Install and setup xonsh
+        run: |
+          sudo apt-get install python3-setuptools
+          sudo pip3 install xonsh
+          echo "::set-env name=LOGNAME::shopsystem-bot"
+          sudo service sshd stop
       - name: Run acceptance tests
         run: shopsystems-ui-test-runner/.bin/setup-and-run-ui-tests.sh
         shell: bash
