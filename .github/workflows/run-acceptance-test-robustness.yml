@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - { shop-system: woocommerce-ee, php-version: 7.2 }
+          - { shop-system: woocommerce-ee, php-version: 7.4 }
         operating-system: [ubuntu-latest]
     steps:
       - name: Checkout ${{ matrix.config.shop-system }}
@@ -24,7 +24,7 @@ jobs:
         uses: wirecard/checkout@v2.0.0
         with:
           repository: 'wirecard/shopsystems-ui-test-runner'
-          ref: 'tatjana-test'
+          ref: 'master'
           path: shopsystems-ui-test-runner
       - name: PHP version setup
         uses: wirecard/setup-php@2.1.3
@@ -62,7 +62,7 @@ jobs:
         run: shopsystems-ui-test-runner/.bin/setup-and-run-ui-tests.sh
         shell: bash
         env:
-          WIRECARD_PLUGIN_VERSION: master
+          WIRECARD_PLUGIN_VERSION: '7b791bcade235f4aa2c26443d41c6fa9f47e2e79'
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
           TEST_SUITE_BRANCH: ${{ github.head_ref }}
           PHP_VERSION: ${{ matrix.config.php-version }}
