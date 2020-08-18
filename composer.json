@@ -4,7 +4,8 @@
     "license": "MIT",
     "require": {
         "php": ">=7.2",
-        "ext-json": "*"
+        "ext-json": "*",
+        "hoa/console": "^3.17"
     },
     "require-dev": {
         "codeception/codeception": "4.1.6",
