@@ -25,26 +25,18 @@ class CreditCardOneClickStep extends CreditCardStep
     public function chooseCardFromSavedCardsList($shopSystem) : void
     {
         $this->performChoosingCard($shopSystem);
-    //    $this->pause();
         $returnStatus = $this->switchToCreditCardUIFrame();
-        if (! $returnStatus) {
-            $this->reloadPage();
-            $this->performChoosingCard($shopSystem);
-            $this->switchToCreditCardUIFrame();
-        }
         //make sure that credit card form is loaded again and we're ready to proceed
         $counter = 0;
         while (! $returnStatus && $counter<=10) {
-            $this->reloadPage();
-            $this->performChoosingCard($shopSystem);
-            $returnStatus = $this->switchToCreditCardUIFrame();
+            $returnStatus = $this->redoChoosingCard($shopSystem);
             $counter++;
         }
         $this->switchToCreditCardUIFrame();
         try {
             $this->waitForText($this->getLocator()->use_different_card);
         } catch (Exception $e) {
-            $this->scrollTo();
+            $this->scrollTo($this->getLocator()->seamless);
             $this->switchToCreditCardUIFrame();
             $this->waitForText($this->getLocator()->use_different_card);
         }
@@ -84,6 +76,18 @@ class CreditCardOneClickStep extends CreditCardStep
 
     /**
      * @param $shopSystem
+     * @return boolean
+     * @throws Exception
+     */
+    private function redoChoosingCard($shopSystem)
+    {
+        $this->reloadPage();
+        $this->performChoosingCard($shopSystem);
+        return $this->switchToCreditCardUIFrame();
+    }
+
+    /**
+     * @param $shopSystem
      * @return String
      */
     private function getSaveForLaterUseLocator($shopSystem): String
@@ -93,4 +97,5 @@ class CreditCardOneClickStep extends CreditCardStep
         }
         return $this->getLocator()->save_for_later_use;
     }
+
 }
