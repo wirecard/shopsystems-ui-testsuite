@@ -97,6 +97,12 @@ class WoocommerceBackendStep extends GenericShopSystemStep
 
     const TX_ID = 'tx_id';
 
+    const ORDER_STATE_TABLE = 'wp_posts';
+
+    const ORDER_STATE = 'post_status';
+
+    const ORDER_STATE_DATETIME = 'post_date';
+
     /**
      * @var array
      */
@@ -115,6 +121,17 @@ class WoocommerceBackendStep extends GenericShopSystemStep
         [
             '€' => 'EUR',
             '$' => 'USD'
+        ];
+
+    /**
+     * @var array
+     */
+    private $orderState =
+        [
+            'processing' => 'wc-processing',
+            'pending' => 'wc-pending',
+            'on-hold' => 'wc-on-hold',
+            'authorized' => 'wc-authorization'
         ];
 
     /**
@@ -314,5 +331,28 @@ class WoocommerceBackendStep extends GenericShopSystemStep
         }
 
         return $paymentMethod;
+    }
+
+    /**
+     * @param $orderState
+     */
+    public function validateOrderState($orderState): void
+    {
+        $mappedOrderState = $this->mapOrderState($orderState);
+
+        $lastDatetimeRecord = $this->grabFromDatabase(static::ORDER_STATE_TABLE, 'max('. static::ORDER_STATE_DATETIME .')');
+        $orderStateDatabaseValue = $this->grabFromDatabase(static::ORDER_STATE_TABLE, static::ORDER_STATE, array(static::ORDER_STATE_DATETIME => $lastDatetimeRecord));
+
+        $this->assertEquals($orderStateDatabaseValue, $mappedOrderState);
+    }
+
+    /**
+     * @param $orderState
+     * @return string
+     */
+    public function mapOrderState($orderState)
+    {
+        $orderState = $this->orderState[$orderState];
+        return $orderState;
     }
 }
