@@ -425,7 +425,7 @@ class AcceptanceTester extends Actor
     }
 
     /**
-     * @Given /^I check order state (.*) in database$/
+     * @Given I check order state :orderState in database
      * @param $orderState
      */
     public function iCheckOrderStateInDatabase($orderState)
