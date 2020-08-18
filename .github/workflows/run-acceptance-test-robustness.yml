@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - { shop-system: woocommerce-ee, php-version: 7.2 }
+          - { shop-system: woocommerce-ee, php-version: 7.4 }
         operating-system: [ubuntu-latest]
     steps:
       - name: Checkout ${{ matrix.config.shop-system }}
@@ -48,14 +48,22 @@ jobs:
         id: file
         with:
           format: space-delimited
-          token: ${{ secrets.WORKFLOW_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Export feature file
         shell: bash
         run: echo "::set-env name=FEATURE_FILES::${{ steps.file.outputs.all }}"
+      - name: Install and setup xonsh
+        run: |
+          sudo apt-get install python3-setuptools
+          sudo pip3 install xonsh
+          echo "::set-env name=LOGNAME::shopsystem-bot"
+          sudo service sshd stop
       - name: Run acceptance tests
         run: shopsystems-ui-test-runner/.bin/setup-and-run-ui-tests.sh
         shell: bash
         env:
+          WIRECARD_PLUGIN_VERSION: 'master'
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
           TEST_SUITE_BRANCH: ${{ github.head_ref }}
           PHP_VERSION: ${{ matrix.config.php-version }}
           NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
@@ -68,7 +76,7 @@ jobs:
         if: ${{ success() }}
         uses: wirecard/add-remove-label@v1
         with:
-          token: ${{secrets.WORKFLOW_TOKEN}}
+          token: ${{secrets.GITHUB_TOKEN}}
           label: unstable acceptance test detected
           type: remove
       - name: Acceptance tests passed
@@ -82,7 +90,7 @@ jobs:
         if: ${{ failure() }}
         uses: wirecard/add-remove-label@v1
         with:
-          token: ${{secrets.WORKFLOW_TOKEN}}
+          token: ${{secrets.GITHUB_TOKEN}}
           label: unstable acceptance test detected
           type: add
       - name: Acceptance tests failed

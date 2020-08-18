@@ -25,13 +25,25 @@ class CreditCardOneClickStep extends CreditCardStep
     public function chooseCardFromSavedCardsList($shopSystem) : void
     {
         $this->performChoosingCard($shopSystem);
+        $returnStatus = $this->switchToCreditCardUIFrame();
         //make sure that credit card form is loaded again and we're ready to proceed
+        $counter = 0;
+        while (! $returnStatus && $counter<=10) {
+            $returnStatus = $this->redoChoosingCard($shopSystem);
+            $counter++;
+        }
         $this->switchToCreditCardUIFrame();
-        $this->waitForText($this->getLocator()->use_different_card);
+        try {
+            $this->waitForText($this->getLocator()->use_different_card);
+        } catch (Exception $e) {
+            $this->scrollTo($this->getLocator()->seamless);
+            $this->switchToCreditCardUIFrame();
+            $this->waitForText($this->getLocator()->use_different_card);
+        }
         //sometimes we need to fill cvv
         try {
             $this->fillField($this->getLocator()->cvv, $this->getPaymentMethod()->getCvv());
-        } catch (TimeOutException $e) {
+        } catch (Exception $e) {
         }
         $this->switchToIFrame();
     }
@@ -60,6 +72,18 @@ class CreditCardOneClickStep extends CreditCardStep
                 $this->preparedClick($this->getLocator()->use_card);
                 break;
         }
+    }
+
+    /**
+     * @param $shopSystem
+     * @return boolean
+     * @throws Exception
+     */
+    private function redoChoosingCard($shopSystem)
+    {
+        $this->reloadPage();
+        $this->performChoosingCard($shopSystem);
+        return $this->switchToCreditCardUIFrame();
     }
 
     /**
