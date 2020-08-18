@@ -15,5 +15,6 @@
   "cc_token_woocommerce" : "//input[@type='radio'][contains(@name, 'token')]",
   "cc_token_generic_text": "//*[@id='cc-reuse-mask']",
   "use_card": "//*[@id='use-new-card']",
+  "seamless": "//*[@id='pp-seamless']",
   "use_different_card": "Use different card"
 }

@@ -41,7 +41,13 @@ class CreditCardOneClickStep extends CreditCardStep
             $counter++;
         }
         $this->switchToCreditCardUIFrame();
-        $this->waitForText($this->getLocator()->use_different_card);
+        try {
+            $this->waitForText($this->getLocator()->use_different_card);
+        } catch (Exception $e) {
+            $this->scrollTo();
+            $this->switchToCreditCardUIFrame();
+            $this->waitForText($this->getLocator()->use_different_card);
+        }
         //sometimes we need to fill cvv
         try {
             $this->fillField($this->getLocator()->cvv, $this->getPaymentMethod()->getCvv());
