@@ -46,6 +46,7 @@ class CreditCardStep extends GenericPaymentMethodStep implements iPerformPayment
 
     /**
      * Method switchToCreditCardUIFrame
+     * @return boolean
      * @throws Exception
      */
     public function switchToCreditCardUIFrame()
