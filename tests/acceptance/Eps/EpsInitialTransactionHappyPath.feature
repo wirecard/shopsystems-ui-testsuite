@@ -20,5 +20,5 @@ Feature: EpsInitialTransactionHappyPath
     And I check order state <order_state> in database
 
     Examples:
-      | payment_action  | amount | transaction_type | order_state |
-      | "debit"         | 20     | "debit"          | processing  |
+      | payment_action  | amount | transaction_type |  order_state  |
+      | "debit"         | 20     | "debit"          | "processing"  |

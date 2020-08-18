@@ -19,5 +19,5 @@ Feature: SofortInitialTransaction
     And I check order state <order_state> in database
 
     Examples:
-      | payment_action | transaction_type | order_state |
-      |     "debit"    |      "debit"     | processing  |
+      | payment_action | transaction_type |  order_state  |
+      |     "debit"    |      "debit"     | "processing"  |

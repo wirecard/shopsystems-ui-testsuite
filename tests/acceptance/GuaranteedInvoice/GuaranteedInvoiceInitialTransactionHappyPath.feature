@@ -19,5 +19,5 @@ Feature: GuaranteedInvoiceInitialTransactionHappyPath
     And I check order state <order_state> in database
 
     Examples:
-      | payment_action | transaction_type | order_state |
-      |   "reserve"    | "authorization"  |   authorized   |
+      | payment_action | transaction_type |  order_state |
+      |   "reserve"    | "authorization"  | "authorized" |

@@ -330,18 +330,11 @@ class Magento2Step extends GenericShopSystemStep implements iConfigurePaymentMet
     {
     }
 
-    /**
-     * @param $paymentMethod
-     * @param $paymentAction
-     */
-    public function validateTransactionFields($paymentMethod, $paymentAction): void
+    public function validateTransactionFields()
     {
     }
 
-    /**
-     * @param $orderState
-     */
-    public function validateOrderState($orderState): void
+    public function validateOrderState()
     {
     }
 }

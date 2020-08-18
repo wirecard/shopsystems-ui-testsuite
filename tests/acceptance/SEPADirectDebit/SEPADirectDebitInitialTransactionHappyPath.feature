@@ -21,5 +21,5 @@ Feature: SEPADirectDebitInitialTransactionHappyPath
 
     Examples:
       | payment_action  | amount | transaction_type | order_state |
-      |    "reserve"    |  "20"  |  "authorization" | on-hold  |
-      |      "pay"      |  "20"  |  "debit"         | on-hold  |
+      |    "reserve"    |  "20"  |  "authorization" |  "on-hold"  |
+      |      "pay"      |  "20"  |  "debit"         |  "on-hold"  |

@@ -19,5 +19,5 @@ Feature: PaymentOnInvoice/PaymentInAdvanceInitialTransactionHappyPath
 
     Examples:
       | payment_type         | amount | transaction_type | order_state |
-      | "Payment On Invoice" | 100    | "authorization"  | on-hold  |
-      | "Payment In Advance" | 100    | "authorization"  | on-hold  |
+      | "Payment On Invoice" | 100    | "authorization"  |  "on-hold"  |
+      | "Payment In Advance" | 100    | "authorization"  |  "on-hold"  |

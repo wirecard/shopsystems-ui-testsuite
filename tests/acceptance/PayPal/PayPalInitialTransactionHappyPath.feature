@@ -19,6 +19,6 @@ Feature: PayPalInitialTransaction
     And I check order state <order_state> in database
 
     Examples:
-      | payment_action | transaction_type | order_state |
-      |      "pay"     |    "purchase"    | processing  |
-      |    "reserve"   |  "authorization" | authorized  |
+      | payment_action | transaction_type |  order_state  |
+      |      "pay"     |    "purchase"    | "processing"  |
+      |    "reserve"   |  "authorization" | "authorized"  |

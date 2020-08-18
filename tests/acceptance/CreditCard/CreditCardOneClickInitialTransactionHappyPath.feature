@@ -28,5 +28,5 @@ Feature: CreditCardOneClickInitialTransactionHappyPath
     And I check order state <order_state> in database
 
     Examples:
-      | payment_action  | amount | transaction_type | order_state |
-      |    "reserve"    | "100"  |  "authorization" | authorized  |
+      | payment_action  | amount | transaction_type |  order_state  |
+      |    "reserve"    | "100"  |  "authorization" | "authorized"  |

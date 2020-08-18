@@ -20,8 +20,8 @@ Feature: CreditCardInitialTransactionHappyPath
 
     Examples:
       | payment_action  | amount | transaction_type | order_state |
-      |    "reserve"    |  "20"  |  "authorization" | authorized  |
-      |      "pay"      |  "20"  |    "purchase"    | processing  |
+      |    "reserve"    |  "20"  |  "authorization" | "authorized"  |
+      |      "pay"      |  "20"  |    "purchase"    | "processing"  |
 
   @woocommerce @prestashop @magento2 @major @minor @patch
   Scenario Outline: initial transaction 3DS
@@ -37,6 +37,6 @@ Feature: CreditCardInitialTransactionHappyPath
     And I check order state <order_state> in database
 
     Examples:
-      | payment_action  | amount | transaction_type | order_state |
-      |    "reserve"    |  "100" |  "authorization" | authorized  |
-      |      "pay"      |  "100" |    "purchase"    | processing  |
+      | payment_action  | amount | transaction_type |  order_state  |
+      |    "reserve"    |  "100" |  "authorization" | "authorized"  |
+      |      "pay"      |  "100" |    "purchase"    | "processing"  |
