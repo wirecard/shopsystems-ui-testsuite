@@ -97,5 +97,4 @@ class CreditCardOneClickStep extends CreditCardStep
         }
         return $this->getLocator()->save_for_later_use;
     }
-
 }
