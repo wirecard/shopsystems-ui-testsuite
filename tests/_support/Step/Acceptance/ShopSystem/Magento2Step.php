@@ -329,4 +329,19 @@ class Magento2Step extends GenericShopSystemStep implements iConfigurePaymentMet
     public function configureShippingZone()
     {
     }
+
+    /**
+     * @param $paymentMethod
+     * @param $paymentAction
+     */
+    public function validateTransactionFields($paymentMethod, $paymentAction): void
+    {
+    }
+
+    /**
+     * @param $orderState
+     */
+    public function validateOrderState($orderState): void
+    {
+    }
 }

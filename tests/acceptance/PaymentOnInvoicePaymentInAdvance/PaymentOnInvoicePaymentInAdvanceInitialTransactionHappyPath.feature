@@ -14,9 +14,10 @@ Feature: PaymentOnInvoice/PaymentInAdvanceInitialTransactionHappyPath
     And I start "PaymentOnInvoice/PaymentInAdvance" payment
     When I place the order and continue "PaymentOnInvoice/PaymentInAdvance" payment
     Then I see successful payment
-    And I see "PaymentOnInvoice/PaymentInAdvance" transaction type <transaction_type> in transaction table
+    And I check values for "PaymentOnInvoice/PaymentInAdvance" and <transaction_type> transaction type
+    And I check order state <order_state> in database
 
     Examples:
-      | payment_type         | amount | transaction_type |
-      | "Payment On Invoice" | 100    | "authorization"  |
-      | "Payment In Advance" | 100    | "authorization"  |
+      | payment_type         | amount | transaction_type | order_state |
+      | "Payment On Invoice" | 100    | "authorization"  | on-hold  |
+      | "Payment In Advance" | 100    | "authorization"  | on-hold  |

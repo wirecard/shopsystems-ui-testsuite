@@ -15,9 +15,10 @@ Feature: PayPalInitialTransaction
     And I place the order and continue "PayPal" payment
     When I perform "PayPal" actions outside of the shop
     Then I see successful payment
-    And I see "PayPal" transaction type <transaction_type> in transaction table
+    And I check values for "PayPal" and <transaction_type> transaction type
+    And I check order state <order_state> in database
 
     Examples:
-      | payment_action                                     | transaction_type |
-      | "pay"                                              | "purchase" |
-      | "reserve"                                          | "authorization" |
+      | payment_action | transaction_type | order_state |
+      |      "pay"     |    "purchase"    | processing  |
+      |    "reserve"   |  "authorization" | authorized  |

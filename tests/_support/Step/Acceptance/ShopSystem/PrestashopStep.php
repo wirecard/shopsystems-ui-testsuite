@@ -300,4 +300,19 @@ class PrestashopStep extends GenericShopSystemStep implements
     public function configureShippingZone()
     {
     }
+
+    /**
+     * @param $paymentMethod
+     * @param $paymentAction
+     */
+    public function validateTransactionFields($paymentMethod, $paymentAction): void
+    {
+    }
+
+    /**
+     * @param $orderState
+     */
+    public function validateOrderState($orderState): void
+    {
+    }
 }
