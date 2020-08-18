@@ -29,7 +29,7 @@ env:
           port: 80
           url: '%SHOP_URL%'
           browser: chrome # 'chrome' or 'firefox'
-#          window_size: 1700x1056
+          window_size: 1600x1024
           capabilities:
             'build': '%SHOP_VERSION%'
             'project': '%SHOP_SYSTEM%-%SHOP_VERSION%-%EXTENSION_VERSION%'
