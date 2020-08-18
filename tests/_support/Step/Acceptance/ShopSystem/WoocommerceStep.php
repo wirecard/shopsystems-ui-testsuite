@@ -121,7 +121,11 @@ class WoocommerceStep extends WoocommerceAdministrationStep implements
             $paymentMethod = $this->getActingPaymentMethod($paymentMethod);
         }
         $paymentMethodRadioButtonLocator  = 'wirecard_' . strtolower($paymentMethod);
-        $this->preparedClick($this->getLocator()->checkout->$paymentMethodRadioButtonLocator, 5);
+        try {
+            $this->preparedClick($this->getLocator()->checkout->$paymentMethodRadioButtonLocator, 5);
+        } catch (Exception $e) {
+            $this->preparedClick($this->getLocator()->checkout->$paymentMethodRadioButtonLocator, 5);
+        }
     }
 
     /**
