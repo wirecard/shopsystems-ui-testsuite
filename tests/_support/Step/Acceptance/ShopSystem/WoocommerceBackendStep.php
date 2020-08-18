@@ -341,10 +341,14 @@ class WoocommerceBackendStep extends GenericShopSystemStep
         $mappedOrderState = $this->mapOrderState($orderState);
 
         $lastDatetimeRecord = $this->grabFromDatabase(
-            static::ORDER_STATE_TABLE, 'max('. static::ORDER_STATE_DATETIME .')');
+            static::ORDER_STATE_TABLE,
+            'max('. static::ORDER_STATE_DATETIME .')'
+        );
         $orderStateValue = $this->grabFromDatabase(
-            static::ORDER_STATE_TABLE, static::ORDER_STATE,
-            array(static::ORDER_STATE_DATETIME => $lastDatetimeRecord));
+            static::ORDER_STATE_TABLE,
+            static::ORDER_STATE,
+            array(static::ORDER_STATE_DATETIME => $lastDatetimeRecord)
+        );
 
         $this->assertEquals($orderStateValue, $mappedOrderState);
     }
