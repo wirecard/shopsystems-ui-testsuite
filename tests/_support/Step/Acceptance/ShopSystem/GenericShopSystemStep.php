@@ -29,12 +29,20 @@ class GenericShopSystemStep extends GenericStep
      */
     private $adminUser;
 
+    /**
+     * @var
+     */
     private $mappedPaymentActions;
 
     /**
      * @var array
      */
     private $redirectPaymentMethods = ['PayPal', 'iDEAL','AlipayCrossBorder', 'Sofort', 'giropay'];
+
+    /**
+     * @var array
+     */
+    private $postProcessingOperationTxTypes = ['refund-purchase'];
 
     /**
      * GenericStep constructor.
@@ -255,6 +263,14 @@ class GenericShopSystemStep extends GenericStep
     public function getRedirectPaymentMethods(): array
     {
         return $this->redirectPaymentMethods;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPostProcessingOperationTxTypes(): array
+    {
+        return $this->postProcessingOperationTxTypes;
     }
 
     /**

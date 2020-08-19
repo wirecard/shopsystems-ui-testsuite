@@ -459,5 +459,4 @@ class AcceptanceTester extends Actor
     {
         $this->shopInstance->performPostProcessingOperation($transactionType);
     }
-
 }
