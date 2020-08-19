@@ -8,7 +8,7 @@
   "town": "",
   "post_code": "",
   "phone": "",
-  "email_address": "test@test.com",
-  "password": "password",
-  "login_username": "admin"
+  "email_address": "woocommerce",
+  "password": "woocommerce",
+  "login_username": "woocommerce"
 }

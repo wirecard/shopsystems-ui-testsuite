@@ -7,7 +7,12 @@
     },
     "tx_table": {
       "authorization": "authorization",
-      "purchase": "purchase"
+      "purchase": "purchase",
+      "refund-purchase": "refund-purchase"
+    },
+    "backend": {
+      "CreditCard": "Card Payments",
+      "refund": "Refund"
     }
   },
   "PayPal": {

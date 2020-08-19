@@ -2,6 +2,7 @@
 
 namespace Step\Acceptance\ShopSystem;
 
+use Codeception\Util\Locator;
 use Exception;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 
@@ -159,5 +160,56 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
             [$this, 'waitUntilSeeInPopupWindow'],
             [$this->getLocator()->merchant_configuration->successfully_tested]
         );
+    }
+
+    /**
+     * Method checks that transaction has correct payment method name and transaction type
+     * @param $paymentMethod
+     * @param $transactionType
+     */
+    public function checkTransactionTypeInBackendTransactionTable($paymentMethod, $transactionType)
+    {
+        $this->amOnPage($this->getLocator()->page->transaction_table);
+        $lastTransactionRow =$this->grabTextFrom(Locator::elementAt(
+            $this->getLocator()->transaction_table->table . ' > tr',
+            2
+        ));
+        $this->assertContains(
+            $this->getMappedPaymentActions()->$paymentMethod->backend->$paymentMethod,
+            $lastTransactionRow
+        );
+        $this->assertContains(strtolower($transactionType), $lastTransactionRow);
+        $this->makeScreenshot();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastTransactionIdFromBackendTransactionTable()
+    {
+        $this->amOnPage($this->getLocator()->page->transaction_table);
+        $tableHeader = $this->grabMultiple($this->getLocator()->transaction_table->table
+            . ' > tr > th');
+        $txIdRowNumber = array_search($this->getLocator()->transaction_table->transaction_id, $tableHeader, false);
+        $lastTransactionRow = explode(
+            ' ',
+            $this->grabTextFrom(Locator::elementAt(
+                $this->getLocator()->transaction_table->table
+                . ' > tr',
+                2
+            ))
+        );
+        return $lastTransactionRow[$txIdRowNumber];
+    }
+
+    /**
+     * @param $transactionType
+     * @throws Exception
+     */
+    public function performPostProcessingOperation($transactionType)
+    {
+        $txId = $this->getLastTransactionIdFromBackendTransactionTable();
+        $this->click($txId);
+        $this->preparedClick($this->getLocator()->transaction_page->$transactionType);
     }
 }
