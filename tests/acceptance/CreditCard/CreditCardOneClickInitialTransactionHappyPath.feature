@@ -27,4 +27,4 @@ Feature: CreditCardOneClickInitialTransactionHappyPath
 
     Examples:
       | payment_action  | amount | transaction_type |  order_state  |
-      |    "reserve"    | "100"  |  "authorization" | "authorized"  |
+      |    "reserve"    | "20"  |  "authorization" | "authorized"  |
