@@ -184,7 +184,8 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
     public function checkTransactionTypeInBackendTransactionTable($paymentMethod, $transactionType)
     {
         $this->amOnPage($this->getLocator()->page->transaction_table);
-        $lastTransactionRow = $this->grabTextFrom(Locator::elementAt(
+        $locator = new Locator();
+        $lastTransactionRow = $this->grabTextFrom($locator::elementAt(
             $this->getLocator()->transaction_table->table . ' > tr',
             2
         ));
@@ -194,7 +195,7 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
         );
         $this->assertContains(strtolower($transactionType), $lastTransactionRow);
         $this->makeScreenshot();
-        if (in_array($transactionType, $this->getPostProcessingOperationTxTypes(), true)) {
+        if (in_array($transactionType, $this->getPostProcTxTypes(), true)) {
             $this->checkPostProcessingTransactionParendTxId($lastTransactionRow);
         }
     }
@@ -208,9 +209,10 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
         $tableHeader = $this->grabMultiple($this->getLocator()->transaction_table->table
             . ' > tr > th');
         $txIdRowNumber = array_search($this->getLocator()->transaction_table->transaction_id, $tableHeader, false);
+        $locator = new Locator();
         $lastTransactionRow = explode(
             ' ',
-            $this->grabTextFrom(Locator::elementAt(
+            $this->grabTextFrom($locator::elementAt(
                 $this->getLocator()->transaction_table->table
                 . ' > tr',
                 $index

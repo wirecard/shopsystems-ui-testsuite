@@ -42,7 +42,7 @@ class GenericShopSystemStep extends GenericStep
     /**
      * @var array
      */
-    private $postProcessingOperationTxTypes = ['refund-purchase'];
+    private $postProcTxTypes = ['refund-purchase'];
 
     /**
      * GenericStep constructor.
@@ -268,9 +268,9 @@ class GenericShopSystemStep extends GenericStep
     /**
      * @return array
      */
-    public function getPostProcessingOperationTxTypes(): array
+    public function getPostProcTxTypes(): array
     {
-        return $this->postProcessingOperationTxTypes;
+        return $this->postProcTxTypes;
     }
 
     /**
