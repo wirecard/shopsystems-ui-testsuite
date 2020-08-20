@@ -22,8 +22,10 @@ Feature: CreditCardPostProcessingOperationHappyPath
     And I check "CreditCard" transaction type <transaction_type> in backend transaction table
     And I preform post-processing operation <post_proc_operation>
     Then I see "CreditCard" transaction type <post_proc_transaction_type> in transaction table
+    And I check order state <order_state> in database
     And I check "CreditCard" transaction type <post_proc_transaction_type> in backend transaction table
 
+
     Examples:
-      | payment_action  | amount | transaction_type | post_proc_operation| post_proc_transaction_type |
-      |      "pay"      |  "100" |    "purchase"    |   "refund"         |          "refund-purchase" |
+      | payment_action  | amount | transaction_type | post_proc_operation| post_proc_transaction_type | order_state  |
+      |      "pay"      |  "100" |    "purchase"    |   "refund"         |          "refund-purchase" |  "refunded"  |
