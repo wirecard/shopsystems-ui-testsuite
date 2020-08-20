@@ -423,4 +423,13 @@ class AcceptanceTester extends Actor
     {
         $this->shopInstance->validateTransactionFields($paymentMethod, $paymentAction);
     }
+
+    /**
+     * @Given I check order state :orderState in database
+     * @param $orderState
+     */
+    public function iCheckOrderStateInDatabase($orderState)
+    {
+        $this->shopInstance->validateOrderState($orderState);
+    }
 }

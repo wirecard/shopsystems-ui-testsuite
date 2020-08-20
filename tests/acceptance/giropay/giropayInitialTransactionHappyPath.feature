@@ -16,8 +16,9 @@ Feature: giropayInitialTransaction
     And I place the order and continue "giropay" payment
     When I perform "giropay" actions outside of the shop
     Then I see successful payment
-    And I see "giropay" transaction type <transaction_type> in transaction table
+    And I check values for "giropay" and <transaction_type> transaction type
+    And I check order state <order_state> in database
 
     Examples:
-      | payment_action                                     | transaction_type |
-      | "debit"                                                    | "debit" |
+      | payment_action | transaction_type |  order_state  |
+      |     "debit"    |      "debit"     | "processing"  |

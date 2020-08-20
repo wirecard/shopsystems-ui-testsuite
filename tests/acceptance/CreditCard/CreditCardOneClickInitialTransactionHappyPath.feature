@@ -22,8 +22,9 @@ Feature: CreditCardOneClickInitialTransactionHappyPath
     And I place the order and continue "CreditCardOneClick" payment
     And I choose "CreditCardOneClick" from saved cards list
     Then I see successful payment
-    And I see "CreditCard" transaction type <transaction_type> in transaction table
+    And I check values for "CreditCard" and <transaction_type> transaction type
+    And I check order state <order_state> in database
 
     Examples:
-      | payment_action  | amount | transaction_type |
-      |    "reserve"    | "20"  |  "authorization" |
+      | payment_action  | amount | transaction_type |  order_state  |
+      |    "reserve"    | "20"  |  "authorization" | "authorized"  |

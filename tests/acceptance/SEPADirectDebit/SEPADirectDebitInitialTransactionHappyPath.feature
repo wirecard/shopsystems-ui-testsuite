@@ -16,9 +16,10 @@ Feature: SEPADirectDebitInitialTransactionHappyPath
     And I place the order and continue "SEPADirectDebit" payment
     When I perform additional "SEPADirectDebit" payment steps inside the shop
     Then I see successful payment
-    And I see "SEPADirectDebit" transaction type <transaction_type> in transaction table
+    And I check values for "SEPADirectDebit" and <transaction_type> transaction type
+    And I check order state <order_state> in database
 
     Examples:
-      | payment_action  | amount | transaction_type |
-      |    "reserve"    |  "20"  |  "authorization" |
-      |      "pay"      |  "20"  |  "debit"         |
+      | payment_action  | amount | transaction_type | order_state |
+      |    "reserve"    |  "20"  |  "authorization" |  "on-hold"  |
+      |      "pay"      |  "20"  |  "debit"         |  "on-hold"  |

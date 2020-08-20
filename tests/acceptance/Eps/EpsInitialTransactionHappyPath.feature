@@ -16,8 +16,9 @@ Feature: EpsInitialTransactionHappyPath
     And I place the order and continue "eps-Überweisung" payment
     And I perform "eps-Überweisung" actions outside of the shop
     Then I see successful payment
-    And I see "eps-Überweisung" transaction type <transaction_type> in transaction table
+    And I check values for "eps-Überweisung" and <transaction_type> transaction type
+    And I check order state <order_state> in database
 
     Examples:
-      | payment_action  | amount | transaction_type |
-      | "debit"         | 20     | "debit"          |
+      | payment_action  | amount | transaction_type |  order_state  |
+      | "debit"         | 20     | "debit"          | "processing"  |

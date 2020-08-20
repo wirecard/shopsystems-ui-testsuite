@@ -15,8 +15,9 @@ Feature: GuaranteedInvoiceInitialTransactionHappyPath
     When I fill "GuaranteedInvoice" fields in the shop
     And I place the order and continue "GuaranteedInvoice" payment
     Then I see successful payment
-    And I see "GuaranteedInvoice" transaction type <transaction_type> in transaction table
+    And I check values for "GuaranteedInvoice" and <transaction_type> transaction type
+    And I check order state <order_state> in database
 
     Examples:
-      | payment_action                                     | transaction_type |
-      | "reserve"                                          | "authorization"  |
+      | payment_action | transaction_type |  order_state |
+      |   "reserve"    | "authorization"  | "authorized" |

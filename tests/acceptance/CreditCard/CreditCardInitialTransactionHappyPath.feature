@@ -15,12 +15,13 @@ Feature: CreditCardInitialTransactionHappyPath
     And I place the order and continue "CreditCard" payment
     When I fill "CreditCard" fields in the shop
     Then I see successful payment
-    And I see "CreditCard" transaction type <transaction_type> in transaction table
+    And I check values for "CreditCard" and <transaction_type> transaction type
+    And I check order state <order_state> in database
 
     Examples:
-      | payment_action  | amount | transaction_type |
-      |    "reserve"    |  "20"  |  "authorization" |
-      |      "pay"      |  "20"  |    "purchase"    |
+      | payment_action  | amount | transaction_type | order_state |
+      |    "reserve"    |  "20"  |  "authorization" | "authorized"  |
+      |      "pay"      |  "20"  |    "purchase"    | "processing"  |
 
   @woocommerce @prestashop @magento2 @major @minor @patch
   Scenario Outline: initial transaction 3DS
@@ -32,9 +33,10 @@ Feature: CreditCardInitialTransactionHappyPath
     When I fill "CreditCard" fields in the shop
     And I perform "CreditCard" actions outside of the shop
     Then I see successful payment
-    And I see "CreditCard" transaction type <transaction_type> in transaction table
+    And I check values for "CreditCard" and <transaction_type> transaction type
+    And I check order state <order_state> in database
 
     Examples:
-      | payment_action  | amount | transaction_type |
-      |    "reserve"    |  "100" |  "authorization" |
-      |      "pay"      |  "100" |    "purchase"    |
+      | payment_action  | amount | transaction_type |  order_state  |
+      |    "reserve"    |  "100" |  "authorization" | "authorized"  |
+      |      "pay"      |  "100" |    "purchase"    | "processing"  |
