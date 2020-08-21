@@ -435,6 +435,7 @@ class AcceptanceTester extends Actor
 
     /**
      * @Given I go into the configuration page as :userType
+     * @param $userType
      * @throws Exception
      */
     public function iGoIntoTheConfigurationPageAs($userType)
@@ -446,6 +447,8 @@ class AcceptanceTester extends Actor
 
     /**
      * @Given I check :paymentMethod transaction type :transactionType in backend transaction table
+     * @param  $paymentMethod
+     * @param $transactionType
      */
     public function iCheckTransactionTypeInBackendTransactionTable($paymentMethod, $transactionType)
     {
@@ -454,6 +457,8 @@ class AcceptanceTester extends Actor
 
     /**
      * @When I preform post-processing operation :transactionType
+     * @param $transactionType
+     * @throws Exception
      */
     public function iPreformPostprocessingOperation($transactionType): void
     {
