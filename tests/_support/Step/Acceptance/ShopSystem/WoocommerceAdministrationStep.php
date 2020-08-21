@@ -2,6 +2,7 @@
 
 namespace Step\Acceptance\ShopSystem;
 
+use Codeception\Util\Locator;
 use Exception;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 
@@ -30,19 +31,33 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
     {
         $this->amOnPage($this->getLocator()->page->admin_login);
         try {
-            $this->preparedFillField(
-                $this->getLocator()->wordpress_sign_in->user,
-                $this->getCustomer(static::ADMIN_USER)->getEmailAddress(),
-                10
-            );
-            $this->preparedFillField(
-                $this->getLocator()->wordpress_sign_in->pass,
-                $this->getCustomer(static::ADMIN_USER)->getPassword()
-            );
-            $this->preparedClick($this->getLocator()->wordpress_sign_in->login, 60);
+            $this->fillLoginFields();
         } catch (NoSuchElementException $e) {
             $this->amOnPage($this->getLocator()->page->admin_login);
         }
+        try {
+            $this->see($this->getLocator()->wordpress_sign_in->dashboard);
+        } catch (Exception $e) {
+            $this->amOnPage($this->getLocator()->page->admin_login);
+            $this->fillLoginFields();
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function fillLoginFields()
+    {
+        $this->preparedFillField(
+            $this->getLocator()->wordpress_sign_in->user,
+            $this->getCustomer(static::ADMIN_USER)->getEmailAddress(),
+            10
+        );
+        $this->preparedFillField(
+            $this->getLocator()->wordpress_sign_in->pass,
+            $this->getCustomer(static::ADMIN_USER)->getPassword()
+        );
+        $this->preparedClick($this->getLocator()->wordpress_sign_in->login, 60);
     }
 
     /**
@@ -53,7 +68,7 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
     {
         $this->amOnPage($this->getLocator()->page->payments);
 
-        $paymentMethodTab  = 'payments_tab_' . strtolower($paymentMethod);
+        $paymentMethodTab = 'payments_tab_' . strtolower($paymentMethod);
 
         $this->preparedSeeElement($this->getLocator()->$paymentMethodTab->slider_disabled);
         $this->preparedClick($this->getLocator()->$paymentMethodTab->slider_disabled);
@@ -61,7 +76,7 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
 
         $this->preparedClick($this->getLocator()->$paymentMethodTab->set_up);
 
-        $paymentMethodPage  = 'payments_' . strtolower($paymentMethod);
+        $paymentMethodPage = 'payments_' . strtolower($paymentMethod);
         $this->waitUntil(60, [$this, 'waitUntilPageLoaded'], [$this->getLocator()->page->$paymentMethodPage]);
     }
 
@@ -94,10 +109,10 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
             if (array_key_exists($name . '_text', $this->getLocator()->$pageLocator)) {
                 $locator = $name . '_text';
                 $this->preparedFillField($this->getLocator()->$pageLocator->$locator, $value);
-            } elseif (array_key_exists($name.'_select', $this->getLocator()->$pageLocator)) {
+            } elseif (array_key_exists($name . '_select', $this->getLocator()->$pageLocator)) {
                 $locator = $name . '_select';
                 $this->selectOptionBasedOnElementName($name, $value, $locator, $pageLocator, $txType);
-            } elseif (array_key_exists($name.'_check', $this->getLocator()->$pageLocator)) {
+            } elseif (array_key_exists($name . '_check', $this->getLocator()->$pageLocator)) {
                 $locator = $name . '_check';
                 // All fields should be checked according to test-case
                 $this->checkOptionIfNotAlreadyChecked($locator, $pageLocator);
@@ -112,7 +127,7 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
      */
     public function goToPaymentPageAndCheckIfPaymentMethodIsEnabled($paymentMethod)
     {
-        $paymentMethodTab  = 'payments_tab_' . strtolower($paymentMethod);
+        $paymentMethodTab = 'payments_tab_' . strtolower($paymentMethod);
         $this->amOnPage($this->getLocator()->page->payments);
         $this->preparedSeeElement($this->getLocator()->$paymentMethodTab->slider_enabled);
     }
@@ -125,7 +140,7 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
      */
     public function goToConfigurationPageAndCheckIfEnteredDataIsShown($paymentMethod)
     {
-        $pageLocator  = 'payments_' . strtolower($paymentMethod);
+        $pageLocator = 'payments_' . strtolower($paymentMethod);
         $this->amOnPage($this->getLocator()->page->$pageLocator);
 
         $pageLocator = strtolower($paymentMethod) . '_payment';
@@ -134,10 +149,10 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
             if (array_key_exists($name . '_text', $this->getLocator()->$pageLocator)) {
                 $locator = $name . '_text';
                 $this->seeInField($this->getLocator()->$pageLocator->$locator, $value);
-            } elseif (array_key_exists($name.'_select', $this->getLocator()->$pageLocator)) {
+            } elseif (array_key_exists($name . '_select', $this->getLocator()->$pageLocator)) {
                 $locator = $name . '_select';
                 $this->seeInFieldBasedOnElementName($name, $value, $locator, $pageLocator, $this->txType);
-            } elseif (array_key_exists($name.'_check', $this->getLocator()->$pageLocator)) {
+            } elseif (array_key_exists($name . '_check', $this->getLocator()->$pageLocator)) {
                 $locator = $name . '_check';
                 // All fields should be checked according to test-case
                 $this->seeCheckboxIsChecked($this->getLocator()->$pageLocator->$locator);
@@ -159,5 +174,72 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
             [$this, 'waitUntilSeeInPopupWindow'],
             [$this->getLocator()->merchant_configuration->successfully_tested]
         );
+    }
+
+    /**
+     * Method checks that transaction has correct payment method name and transaction type
+     * @param $paymentMethod
+     * @param $transactionType
+     */
+    public function checkTransactionTypeInBackendTransactionTable($paymentMethod, $transactionType)
+    {
+        $this->amOnPage($this->getLocator()->page->transaction_table);
+        $locator = new Locator();
+        $lastTransactionRow = $this->grabTextFrom($locator::elementAt(
+            $this->getLocator()->transaction_table->table . ' > tr',
+            2
+        ));
+        $this->assertContains(
+            $this->getMappedPaymentActions()->$paymentMethod->backend->$paymentMethod,
+            $lastTransactionRow
+        );
+        $this->assertContains(strtolower($transactionType), $lastTransactionRow);
+        $this->makeScreenshot();
+        if (in_array($transactionType, $this->getPostProcTxTypes(), true)) {
+            $this->checkPostProcessingTransactionParendTxId($lastTransactionRow);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransactionIdFromBackendTransactionTableByIndexFromEnd($index)
+    {
+        $this->amOnPage($this->getLocator()->page->transaction_table);
+        $tableHeader = $this->grabMultiple($this->getLocator()->transaction_table->table
+            . ' > tr > th');
+        $txIdRowNumber = array_search($this->getLocator()->transaction_table->transaction_id, $tableHeader, false);
+        $locator = new Locator();
+        $lastTransactionRow = explode(
+            ' ',
+            $this->grabTextFrom($locator::elementAt(
+                $this->getLocator()->transaction_table->table
+                . ' > tr',
+                $index
+            ))
+        );
+        return $lastTransactionRow[$txIdRowNumber];
+    }
+
+    /**
+     * @param $transactionType
+     * @throws Exception
+     */
+    public function performPostProcessingOperation($transactionType)
+    {
+        //get last transaction ID
+        $txId = $this->getTransactionIdFromBackendTransactionTableByIndexFromEnd(2);
+        $this->click($txId);
+        $this->preparedClick($this->getLocator()->transaction_page->$transactionType);
+    }
+
+    /**
+     * @param $lastTransactionRow
+     */
+    public function checkPostProcessingTransactionParendTxId($lastTransactionRow)
+    {
+        //get transaction ID one before last
+        $parentTxId = $this->getTransactionIdFromBackendTransactionTableByIndexFromEnd(3);
+        $this->assertContains($parentTxId, $lastTransactionRow);
     }
 }

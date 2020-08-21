@@ -131,7 +131,8 @@ class WoocommerceBackendStep extends GenericShopSystemStep
             'processing' => 'wc-processing',
             'pending' => 'wc-pending',
             'on-hold' => 'wc-on-hold',
-            'authorized' => 'wc-authorization'
+            'authorized' => 'wc-authorization',
+            'refunded' => 'wc-completed'
         ];
 
     /**

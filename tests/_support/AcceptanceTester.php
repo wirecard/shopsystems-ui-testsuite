@@ -432,4 +432,36 @@ class AcceptanceTester extends Actor
     {
         $this->shopInstance->validateOrderState($orderState);
     }
+
+    /**
+     * @Given I go into the configuration page as :userType
+     * @param $userType
+     * @throws Exception
+     */
+    public function iGoIntoTheConfigurationPageAs($userType)
+    {
+        if ($userType === static::ADMIN_USER) {
+            $this->shopInstance->logInToAdministrationPanel();
+        }
+    }
+
+    /**
+     * @Given I check :paymentMethod transaction type :transactionType in backend transaction table
+     * @param  $paymentMethod
+     * @param $transactionType
+     */
+    public function iCheckTransactionTypeInBackendTransactionTable($paymentMethod, $transactionType)
+    {
+        $this->shopInstance->checkTransactionTypeInBackendTransactionTable($paymentMethod, $transactionType);
+    }
+
+    /**
+     * @When I preform post-processing operation :transactionType
+     * @param $transactionType
+     * @throws Exception
+     */
+    public function iPreformPostprocessingOperation($transactionType): void
+    {
+        $this->shopInstance->performPostProcessingOperation($transactionType);
+    }
 }
