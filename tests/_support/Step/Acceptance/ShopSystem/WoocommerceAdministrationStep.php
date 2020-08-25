@@ -288,7 +288,8 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
      * @param $transactionType
      * @throws Exception
      */
-    public function checkPostProcessingTransactionFields($paymentMethod, $transactionType) {
+    public function checkPostProcessingTransactionFields($paymentMethod, $transactionType)
+    {
         $orderId = $this->getOrderIdFromDatabase();
 
         // get order ID one before last
