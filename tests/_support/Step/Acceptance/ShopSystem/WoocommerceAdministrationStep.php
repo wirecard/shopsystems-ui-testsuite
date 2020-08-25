@@ -242,4 +242,80 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
         $parentTxId = $this->getTransactionIdFromBackendTransactionTableByIndexFromEnd(3);
         $this->assertContains($parentTxId, $lastTransactionRow);
     }
+
+    /**
+     * @param $transactionType
+     * @param $amount
+     * @throws Exception
+     */
+    public function performPostProcessingOperationPartialRefund($transactionType, $amount)
+    {
+        $orderId = $this->getOrderIdFromDatabase();
+
+        $this->amOnPage($this->getLocator()->page->order);
+        $this->click("//*[contains(@href, $orderId)]");
+        $this->preparedClick($this->getLocator()->order_page->$transactionType);
+        $this->preparedFillField(
+            $this->getLocator()->order_page->partial_refund_amount,
+            $amount
+        );
+        $this->preparedClick($this->getLocator()->order_page->wirecard_refund);
+        $this->acceptPopup();
+        # wait for refund transaction to appear in database
+        $this->wait(5);
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderIdFromDatabase()
+    {
+        $lastDatetimeRecord = $this->grabFromDatabase(
+            static::ORDER_STATE_TABLE,
+            'max('. static::ORDER_STATE_DATETIME .')'
+        );
+        $orderId = $this->grabFromDatabase(
+            static::ORDER_STATE_TABLE,
+            static::ORDER_ID,
+            array(static::ORDER_STATE_DATETIME => $lastDatetimeRecord)
+        );
+
+        return $orderId;
+    }
+
+    /**
+     * @param $paymentMethod
+     * @param $transactionType
+     * @throws Exception
+     */
+    public function checkPostProcessingTransactionFields($paymentMethod, $transactionType) {
+        $orderId = $this->getOrderIdFromDatabase();
+
+        // get order ID one before last
+        $lastOrderId = $orderId - 1;
+
+        $originalTransactionId = $this->grabFromDatabase(
+            static::TRANSACTION_TABLE_NAME,
+            static::TRANSACTION_ID,
+            array(static::TRANSACTION_ORDER_ID => $lastOrderId,
+                static::PARENT_TRANSACTION_ID => '')
+        );
+
+        $this->seeInDatabase(
+            static::TRANSACTION_TABLE_NAME,
+            [static::PARENT_TRANSACTION_ID => $originalTransactionId,
+                static::TRANSACTION_TYPE_COLUMN_NAME => $transactionType,
+                static::TRANSACTION_PAYMENT_METHOD=> strtolower($paymentMethod)
+            ]
+        );
+
+        // float amount doesn't work with codeception
+        $refundAmount = $this->grabFromDatabase(
+            static::TRANSACTION_TABLE_NAME,
+            static::TRANSACTION_AMOUNT,
+            array(static::PARENT_TRANSACTION_ID => $originalTransactionId)
+        );
+
+        $this->assertEquals($refundAmount, 20.1);
+    }
 }

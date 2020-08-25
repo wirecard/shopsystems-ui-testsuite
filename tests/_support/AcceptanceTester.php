@@ -464,4 +464,26 @@ class AcceptanceTester extends Actor
     {
         $this->shopInstance->performPostProcessingOperation($transactionType);
     }
+
+    /**
+     * @Given I perform post-processing operation :transactionType with partial refund amount :amount
+     * @param $transactionType
+     * @param $amount
+     * @throws Exception
+     */
+    public function iPerformPostProcessingOperationWithPartialRefundAmount($transactionType, $amount)
+    {
+        $this->shopInstance->performPostProcessingOperationPartialRefund($transactionType, $amount);
+    }
+
+    /**
+     * @Given I check :paymentMethod :transactionType fields in database
+     * @param $paymentMethod
+     * @param $transactionType
+     * @throws Exception
+     */
+    public function iCheckFieldsInDatabase($paymentMethod, $transactionType)
+    {
+        $this->shopInstance->checkPostProcessingTransactionFields($paymentMethod, $transactionType);
+    }
 }
