@@ -295,7 +295,7 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
         // get order ID one before last
         $lastOrderId = $orderId - 1;
 
-        $originalTransactionId = $this->grabFromDatabase(
+        $originalTxId = $this->grabFromDatabase(
             static::TRANSACTION_TABLE_NAME,
             static::TRANSACTION_ID,
             array(static::TRANSACTION_ORDER_ID => $lastOrderId,
@@ -304,7 +304,7 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
 
         $this->seeInDatabase(
             static::TRANSACTION_TABLE_NAME,
-            [static::PARENT_TRANSACTION_ID => $originalTransactionId,
+            [static::PARENT_TRANSACTION_ID => $originalTxId,
                 static::TRANSACTION_TYPE_COLUMN_NAME => $transactionType,
                 static::TRANSACTION_PAYMENT_METHOD=> strtolower($paymentMethod)
             ]
@@ -314,7 +314,7 @@ class WoocommerceAdministrationStep extends WoocommerceBackendStep
         $refundAmount = $this->grabFromDatabase(
             static::TRANSACTION_TABLE_NAME,
             static::TRANSACTION_AMOUNT,
-            array(static::PARENT_TRANSACTION_ID => $originalTransactionId)
+            array(static::PARENT_TRANSACTION_ID => $originalTxId)
         );
 
         $this->assertEquals($refundAmount, 20.1);
