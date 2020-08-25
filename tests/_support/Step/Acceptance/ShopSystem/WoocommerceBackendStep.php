@@ -103,6 +103,8 @@ class WoocommerceBackendStep extends GenericShopSystemStep
 
     const ORDER_STATE_DATETIME = 'post_date';
 
+    const ORDER_ID = 'ID';
+
     /**
      * @var array
      */

@@ -28,3 +28,24 @@ Feature: CreditCardPostProcessingOperationHappyPath
     Examples:
       | payment_action  | amount | transaction_type | post_proc_operation| post_proc_transaction_type | order_state  |
       |      "pay"      |  "100" |    "purchase"    |   "refund"         |          "refund-purchase" |  "refunded"  |
+
+  @woocommerce @major @minor @patch
+  Scenario Outline: 3DS purchase partial refund
+    Given I activate "CreditCard" payment action <payment_action> in configuration
+    And I prepare checkout with purchase sum <amount> in shop system as "guest customer"
+    And I see "Wirecard Credit Card"
+    And I start "CreditCard" payment
+    And I place the order and continue "CreditCard" payment
+    And I fill "CreditCard" fields in the shop
+    And I perform "CreditCard" actions outside of the shop
+    And I see successful payment
+    And I check values for "CreditCard" and <transaction_type> transaction type
+    When I go into the configuration page as "admin user"
+    And I perform post-processing operation <post_proc_operation> with partial refund amount <refund_amount>
+    Then I check order state <order_state> in database
+    And I check "CreditCard" <post_proc_transaction_type> fields in database
+
+
+    Examples:
+      | payment_action  | amount | transaction_type | post_proc_operation| post_proc_transaction_type | order_state  | refund_amount |
+      |      "pay"      |  "100" |    "purchase"    |   partial_refund |         refund-purchase      |  "refunded"  |     20.10   |

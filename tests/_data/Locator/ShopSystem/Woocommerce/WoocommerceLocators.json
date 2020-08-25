@@ -8,7 +8,8 @@
     "wp_admin": "/wp-admin",
     "payments_creditcard": "/wp-admin/admin.php?page=wc-settings&tab=checkout&section=wirecard_ee_creditcard",
     "payments": "/wp-admin/admin.php?page=wc-settings&tab=checkout",
-    "transaction_table": "wp-admin/admin.php?page=wirecardpayment"
+    "transaction_table": "wp-admin/admin.php?page=wirecardpayment",
+    "order": "/wp-admin/edit.php?post_type=shop_order"
   },
   "product": {
     "price": "20",
@@ -100,5 +101,10 @@
   },
   "transaction_page" : {
     "refund": "//*[contains(@href, 'refund')]"
+  },
+  "order_page": {
+    "partial_refund": "//*[@class='button refund-items']",
+    "partial_refund_amount": "//input[@id='refund_amount']",
+    "wirecard_refund": "//*[@class='button button-primary do-api-refund']"
   }
 }
