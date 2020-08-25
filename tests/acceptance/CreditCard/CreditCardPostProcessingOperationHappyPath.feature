@@ -6,7 +6,7 @@ Feature: CreditCardPostProcessingOperationHappyPath
   Background:
     Given I initialize shop system
 
-  @woocommerce @major @minor @patch
+  @woocommerce
   Scenario Outline: 3DS purchase refund
     Given I activate "CreditCard" payment action <payment_action> in configuration
     And I prepare checkout with purchase sum <amount> in shop system as "guest customer"
